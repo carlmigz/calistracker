@@ -1,0 +1,320 @@
+{
+  "_note": "Placeholder content. Replace with the real CalisTracker curriculum.",
+  "programs": [
+    {
+      "id": "push",
+      "name": "Push-Up Progression",
+      "description": "Build chest, shoulder and triceps strength from the wall to a full push-up.",
+      "exercises": [
+        {
+          "id": "push_wall",
+          "name": "Wall Push-Up",
+          "description": "The gentlest way to learn the push-up pattern.",
+          "muscles": ["Chest", "Shoulders", "Triceps"],
+          "steps": [
+            "Stand an arm's length from a wall, hands at shoulder height.",
+            "Bend your elbows and lean your chest toward the wall.",
+            "Push back to the start with a straight body."
+          ],
+          "sets": 3,
+          "reps": 12
+        },
+        {
+          "id": "push_incline",
+          "name": "Incline Push-Up",
+          "description": "Hands on a bench or table to lower the load.",
+          "muscles": ["Chest", "Shoulders", "Triceps"],
+          "steps": [
+            "Place your hands on a stable raised surface.",
+            "Keep your body in one straight line.",
+            "Lower your chest to the edge, then press up."
+          ],
+          "sets": 3,
+          "reps": 10
+        },
+        {
+          "id": "push_knee",
+          "name": "Knee Push-Up",
+          "description": "Full range of motion with less bodyweight.",
+          "muscles": ["Chest", "Shoulders", "Triceps"],
+          "steps": [
+            "Start on hands and knees, hands under shoulders.",
+            "Lower your chest to the floor with elbows at 45 degrees.",
+            "Press back up without sagging your hips."
+          ],
+          "sets": 3,
+          "reps": 8
+        },
+        {
+          "id": "push_full",
+          "name": "Full Push-Up",
+          "description": "The classic. Strict form, full range.",
+          "muscles": ["Chest", "Shoulders", "Triceps", "Core"],
+          "steps": [
+            "Hands under shoulders, body in a straight line.",
+            "Lower until your chest nearly touches the floor.",
+            "Press up and fully extend your arms."
+          ],
+          "sets": 3,
+          "reps": 6
+        }
+      ]
+    },
+    {
+      "id": "pull",
+      "name": "Pull-Up Progression",
+      "description": "Develop your back and biceps on the way to your first pull-up.",
+      "exercises": [
+        {
+          "id": "pull_hang",
+          "name": "Dead Hang",
+          "description": "Build grip strength and get comfortable on the bar.",
+          "muscles": ["Forearms", "Back"],
+          "steps": [
+            "Grip the bar slightly wider than your shoulders.",
+            "Hang with your arms straight and shoulders engaged.",
+            "Breathe and hold."
+          ],
+          "sets": 3,
+          "holdSeconds": 20
+        },
+        {
+          "id": "pull_row",
+          "name": "Inverted Row",
+          "description": "Horizontal pulling with a low bar.",
+          "muscles": ["Back", "Biceps"],
+          "steps": [
+            "Lie under a low bar and grip it overhand.",
+            "Keep your body straight, heels on the floor.",
+            "Pull your chest to the bar, then lower with control."
+          ],
+          "sets": 3,
+          "reps": 8
+        },
+        {
+          "id": "pull_negative",
+          "name": "Negative Pull-Up",
+          "description": "Lower slowly from the top to build pulling strength.",
+          "muscles": ["Back", "Biceps"],
+          "steps": [
+            "Jump or step up so your chin is over the bar.",
+            "Lower yourself as slowly as you can.",
+            "Reset and repeat."
+          ],
+          "sets": 3,
+          "reps": 5
+        },
+        {
+          "id": "pull_full",
+          "name": "Pull-Up",
+          "description": "Chin over the bar from a dead hang.",
+          "muscles": ["Back", "Biceps", "Core"],
+          "steps": [
+            "Start from a dead hang with an overhand grip.",
+            "Pull until your chin clears the bar.",
+            "Lower under control to full extension."
+          ],
+          "sets": 3,
+          "reps": 3
+        }
+      ]
+    },
+    {
+      "id": "legs",
+      "name": "Squat Progression",
+      "description": "Strong legs and hips, from assisted squats to the pistol.",
+      "exercises": [
+        {
+          "id": "legs_assisted",
+          "name": "Assisted Squat",
+          "description": "Hold a support to learn depth and balance.",
+          "muscles": ["Quads", "Glutes"],
+          "steps": [
+            "Hold a sturdy support at chest height.",
+            "Sit your hips back and down, chest up.",
+            "Drive through your heels to stand."
+          ],
+          "sets": 3,
+          "reps": 12
+        },
+        {
+          "id": "legs_squat",
+          "name": "Bodyweight Squat",
+          "description": "The foundation of every leg exercise.",
+          "muscles": ["Quads", "Glutes", "Hamstrings"],
+          "steps": [
+            "Feet shoulder-width apart, toes slightly out.",
+            "Lower until your thighs are parallel to the floor.",
+            "Stand up tall and squeeze your glutes."
+          ],
+          "sets": 3,
+          "reps": 15
+        },
+        {
+          "id": "legs_split",
+          "name": "Split Squat",
+          "description": "Single-leg strength and balance.",
+          "muscles": ["Quads", "Glutes"],
+          "steps": [
+            "Take a long step forward and stay there.",
+            "Lower your back knee toward the floor.",
+            "Press through the front heel to rise."
+          ],
+          "sets": 3,
+          "reps": 10
+        }
+      ]
+    },
+    {
+      "id": "core",
+      "name": "Core Progression",
+      "description": "Brace, hold and control. The base for every skill.",
+      "exercises": [
+        {
+          "id": "core_plank_knees",
+          "name": "Knee Plank",
+          "description": "Learn to brace your trunk.",
+          "muscles": ["Core"],
+          "steps": [
+            "Forearms on the floor, knees down.",
+            "Squeeze your abs and glutes.",
+            "Hold a straight line from knees to head."
+          ],
+          "sets": 3,
+          "holdSeconds": 20
+        },
+        {
+          "id": "core_plank",
+          "name": "Plank",
+          "description": "The standard full-body brace.",
+          "muscles": ["Core", "Shoulders"],
+          "steps": [
+            "Forearms on the floor, legs straight.",
+            "Keep your hips level, don't let them sag.",
+            "Breathe steadily while you hold."
+          ],
+          "sets": 3,
+          "holdSeconds": 30
+        },
+        {
+          "id": "core_hollow",
+          "name": "Hollow Hold",
+          "description": "The gymnast's core position.",
+          "muscles": ["Core"],
+          "steps": [
+            "Lie on your back, press your lower back into the floor.",
+            "Lift your shoulders and legs a few inches.",
+            "Hold the shallow banana shape."
+          ],
+          "sets": 3,
+          "holdSeconds": 20
+        }
+      ]
+    },
+    {
+      "id": "dips",
+      "name": "Dip Progression",
+      "description": "Triceps and chest strength, from bench dips to parallel-bar dips.",
+      "exercises": [
+        {
+          "id": "dips_bench",
+          "name": "Bench Dip",
+          "description": "Feet on the floor, hands on a bench behind you.",
+          "muscles": ["Triceps", "Shoulders"],
+          "steps": [
+            "Sit on a bench, hands beside your hips, then slide off the edge.",
+            "Lower your body until your elbows reach about 90 degrees.",
+            "Press back up without shrugging your shoulders."
+          ],
+          "sets": 3,
+          "reps": 10
+        },
+        {
+          "id": "dips_support",
+          "name": "Support Hold",
+          "description": "Learn to stay locked out on parallel bars.",
+          "muscles": ["Triceps", "Chest", "Core"],
+          "steps": [
+            "Grip the bars and press up with straight arms.",
+            "Push your shoulders down, away from your ears.",
+            "Hold steady, legs slightly forward."
+          ],
+          "sets": 3,
+          "holdSeconds": 15
+        },
+        {
+          "id": "dips_negative",
+          "name": "Negative Dip",
+          "description": "Lower slowly to build the strength to press back up.",
+          "muscles": ["Triceps", "Chest"],
+          "steps": [
+            "Start in the support position on the bars.",
+            "Lower yourself over 3 to 5 seconds.",
+            "Step or jump back up and repeat."
+          ],
+          "sets": 3,
+          "reps": 5
+        },
+        {
+          "id": "dips_full",
+          "name": "Parallel Bar Dip",
+          "description": "Full range dip with control.",
+          "muscles": ["Triceps", "Chest", "Shoulders"],
+          "steps": [
+            "Start in the support position.",
+            "Lower until your upper arms are parallel to the floor.",
+            "Press up to full lockout."
+          ],
+          "sets": 3,
+          "reps": 5
+        }
+      ]
+    },
+    {
+      "id": "handstand",
+      "name": "Handstand Progression",
+      "description": "Balance and shoulder strength on the road to a freestanding handstand.",
+      "exercises": [
+        {
+          "id": "handstand_pike",
+          "name": "Pike Hold",
+          "description": "Hips high, hands on the floor, feet on the ground.",
+          "muscles": ["Shoulders", "Core"],
+          "steps": [
+            "Start in a push-up position, then walk your feet toward your hands.",
+            "Lift your hips high so your body forms an upside-down V.",
+            "Keep your arms straight and press the floor away."
+          ],
+          "sets": 3,
+          "holdSeconds": 20
+        },
+        {
+          "id": "handstand_wall_walk",
+          "name": "Wall Walk",
+          "description": "Walk your feet up the wall to get used to being upside down.",
+          "muscles": ["Shoulders", "Core"],
+          "steps": [
+            "Lie face down with your feet against the wall.",
+            "Push up and walk your feet up the wall as your hands walk back.",
+            "Go only as high as feels controlled, then walk back down."
+          ],
+          "sets": 3,
+          "reps": 4
+        },
+        {
+          "id": "handstand_wall",
+          "name": "Wall Handstand Hold",
+          "description": "Stack your joints and hold against the wall.",
+          "muscles": ["Shoulders", "Core", "Wrists"],
+          "steps": [
+            "Kick up with your chest facing the wall.",
+            "Squeeze your legs, glutes and core into one straight line.",
+            "Push tall through your shoulders and breathe."
+          ],
+          "sets": 3,
+          "holdSeconds": 20
+        }
+      ]
+    }
+  ]
+}
