@@ -1,10 +1,13 @@
+import 'package:calistracker/core/constants/app_strings.dart';
 import 'package:calistracker/core/components/app_button.dart';
-import 'package:calistracker/core/components/app_text.dart';
 import 'package:calistracker/core/constants/app_sizes.dart';
-import 'package:calistracker/core/themes/app_textstyles.dart';
 import 'package:calistracker/features/timer/presentation/bloc/timer_cubit.dart';
+import 'package:calistracker/features/timer/presentation/components/interval_settings.dart';
+import 'package:calistracker/features/timer/presentation/components/rest_presets.dart';
+import 'package:calistracker/features/timer/presentation/components/timer_dial.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 enum _TimerMode { rest, interval }
@@ -18,51 +21,44 @@ class TimerPage extends StatelessWidget {
   }
 }
 
-class _TimerView extends StatefulWidget {
+class _TimerView extends HookWidget {
   const _TimerView();
 
-  @override
-  State<_TimerView> createState() => _TimerViewState();
-}
-
-class _TimerViewState extends State<_TimerView> {
   static const _restPresets = [30, 60, 90, 120, 180];
-
-  _TimerMode _mode = _TimerMode.rest;
-  int _restSeconds = 60;
-  int _work = 40;
-  int _rest = 20;
-  int _rounds = 5;
-
-  void _apply() {
-    final cubit = context.read<TimerCubit>();
-    if (_mode == _TimerMode.rest) {
-      cubit.configure(work: _restSeconds, rest: 0, rounds: 1);
-    } else {
-      cubit.configure(work: _work, rest: _rest, rounds: _rounds);
-    }
-  }
-
-  void _setMode(_TimerMode mode) {
-    setState(() => _mode = mode);
-    _apply();
-  }
-
-  void _interval({int? work, int? rest, int? rounds}) {
-    setState(() {
-      _work = work ?? _work;
-      _rest = rest ?? _rest;
-      _rounds = rounds ?? _rounds;
-    });
-    _apply();
-  }
 
   @override
   Widget build(BuildContext context) {
+    final mode = useState(_TimerMode.rest);
+    final restSeconds = useState(60);
+    final intervalWork = useState(40);
+    final intervalRest = useState(20);
+    final intervalRounds = useState(5);
+
+    void apply() {
+      final cubit = context.read<TimerCubit>();
+      if (mode.value == _TimerMode.rest) {
+        cubit.configure(work: restSeconds.value, rest: 0, rounds: 1);
+      } else {
+        cubit.configure(
+          work: intervalWork.value,
+          rest: intervalRest.value,
+          rounds: intervalRounds.value,
+        );
+      }
+    }
+
+    void setInterval({int? work, int? rest, int? rounds}) {
+      intervalWork.value = work ?? intervalWork.value;
+      intervalRest.value = rest ?? intervalRest.value;
+      intervalRounds.value = rounds ?? intervalRounds.value;
+      apply();
+    }
+
     return Scaffold(
-      appBar: AppBar(title: const Text('Timer')),
+      appBar: AppBar(title: const Text(AppStrings.navTimer)),
       body: SafeArea(
         child: BlocBuilder<TimerCubit, TimerState>(
+          buildWhen: (a, b) => a.phase != b.phase || a.isRunning != b.isRunning,
           builder: (context, state) {
             final cubit = context.read<TimerCubit>();
 
@@ -73,22 +69,27 @@ class _TimerViewState extends State<_TimerView> {
                   segments: const [
                     ButtonSegment(
                       value: _TimerMode.rest,
-                      label: Text('Rest'),
+                      label: Text(AppStrings.rest),
                       icon: Icon(Icons.hourglass_bottom),
                     ),
                     ButtonSegment(
                       value: _TimerMode.interval,
-                      label: Text('Interval'),
+                      label: Text(AppStrings.timerInterval),
                       icon: Icon(Icons.repeat),
                     ),
                   ],
-                  selected: {_mode},
+                  selected: {mode.value},
                   onSelectionChanged: state.isIdle
-                      ? (s) => _setMode(s.first)
+                      ? (s) {
+                          mode.value = s.first;
+                          apply();
+                        }
                       : null,
                 ),
                 SizedBox(height: 24.h),
-                _Dial(state: state),
+                BlocBuilder<TimerCubit, TimerState>(
+                  builder: (context, tick) => TimerDial(state: tick),
+                ),
                 SizedBox(height: 24.h),
                 Row(
                   spacing: 12.w,
@@ -96,10 +97,10 @@ class _TimerViewState extends State<_TimerView> {
                     Expanded(
                       child: AppButton(
                         text: state.isRunning
-                            ? 'Pause'
+                            ? AppStrings.timerPause
                             : state.isIdle
-                            ? 'Start'
-                            : 'Resume',
+                            ? AppStrings.timerStart
+                            : AppStrings.timerResume,
                         icon: state.isRunning
                             ? Icons.pause
                             : Icons.play_arrow_rounded,
@@ -108,262 +109,43 @@ class _TimerViewState extends State<_TimerView> {
                     ),
                     Expanded(
                       child: AppButton(
-                        text: 'Reset',
+                        text: AppStrings.reset,
                         icon: Icons.refresh,
                         btnColor: Theme.of(
                           context,
                         ).colorScheme.surfaceContainerHighest,
                         textColor: Theme.of(context).colorScheme.onSurface,
                         iconColor: Theme.of(context).colorScheme.onSurface,
-                        onPressed: cubit.reset,
+                        onPressed: state.phase == TimerPhase.idle
+                            ? null
+                            : cubit.reset,
                       ),
                     ),
                   ],
                 ),
                 SizedBox(height: 24.h),
-                if (_mode == _TimerMode.rest)
-                  _RestPresets(
+                if (mode.value == _TimerMode.rest)
+                  RestPresets(
                     presets: _restPresets,
-                    selected: _restSeconds,
+                    selected: restSeconds.value,
                     enabled: state.isIdle,
                     onSelected: (s) {
-                      setState(() => _restSeconds = s);
-                      _apply();
+                      restSeconds.value = s;
+                      apply();
                     },
                   )
                 else
-                  _IntervalSettings(
-                    work: _work,
-                    rest: _rest,
-                    rounds: _rounds,
+                  IntervalSettings(
+                    work: intervalWork.value,
+                    rest: intervalRest.value,
+                    rounds: intervalRounds.value,
                     enabled: state.isIdle,
-                    onChanged: _interval,
+                    onChanged: setInterval,
                   ),
               ],
             );
           },
         ),
-      ),
-    );
-  }
-}
-
-String _format(int seconds) {
-  final m = (seconds ~/ 60).toString().padLeft(2, '0');
-  final s = (seconds % 60).toString().padLeft(2, '0');
-  return '$m:$s';
-}
-
-class _Dial extends StatelessWidget {
-  const _Dial({required this.state});
-
-  final TimerState state;
-
-  @override
-  Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-    final isRest = state.phase == TimerPhase.rest;
-
-    final label = switch (state.phase) {
-      TimerPhase.idle => 'Ready',
-      TimerPhase.work => state.rounds > 1 ? 'Work' : 'Rest',
-      TimerPhase.rest => 'Rest',
-      TimerPhase.done => 'Done!',
-    };
-    final seconds = state.phase == TimerPhase.done
-        ? 0
-        : state.phase == TimerPhase.idle
-        ? state.workSeconds
-        : state.secondsLeft;
-
-    return Center(
-      child: SizedBox(
-        width: 230.r,
-        height: 230.r,
-        child: Stack(
-          fit: StackFit.expand,
-          children: [
-            CircularProgressIndicator(
-              value: state.phase == TimerPhase.done ? 1 : state.progress,
-              strokeWidth: 10.r,
-              strokeCap: StrokeCap.round,
-              color: isRest ? scheme.onSurface : scheme.primary,
-              backgroundColor: scheme.surfaceContainerHighest,
-            ),
-            Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  AppText(
-                    text: _format(seconds),
-                    fFamily: AppTextStyles.headingFontFamily,
-                    fSize: 44.sp,
-                  ),
-                  AppText(text: label, fWeight: FontWeight.w600),
-                  if (state.rounds > 1 && state.phase != TimerPhase.idle)
-                    AppText(
-                      text: 'Round ${state.round} / ${state.rounds}',
-                      fSize: 12.sp,
-                    ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _RestPresets extends StatelessWidget {
-  const _RestPresets({
-    required this.presets,
-    required this.selected,
-    required this.enabled,
-    required this.onSelected,
-  });
-
-  final List<int> presets;
-  final int selected;
-  final bool enabled;
-  final ValueChanged<int> onSelected;
-
-  @override
-  Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-
-    return Wrap(
-      spacing: 8.w,
-      runSpacing: 8.h,
-      alignment: WrapAlignment.center,
-      children: [
-        for (final seconds in presets)
-          ChoiceChip(
-            showCheckmark: false,
-            selected: seconds == selected,
-            selectedColor: scheme.primary,
-            label: Text(
-              seconds >= 60 && seconds % 60 == 0
-                  ? '${seconds ~/ 60} min'
-                  : '$seconds s',
-              style: TextStyle(
-                color: seconds == selected
-                    ? scheme.onPrimary
-                    : scheme.onSurface,
-              ),
-            ),
-            onSelected: enabled ? (_) => onSelected(seconds) : null,
-          ),
-      ],
-    );
-  }
-}
-
-class _IntervalSettings extends StatelessWidget {
-  const _IntervalSettings({
-    required this.work,
-    required this.rest,
-    required this.rounds,
-    required this.enabled,
-    required this.onChanged,
-  });
-
-  final int work;
-  final int rest;
-  final int rounds;
-  final bool enabled;
-  final void Function({int? work, int? rest, int? rounds}) onChanged;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        _Stepper(
-          label: 'Work',
-          value: '${work}s',
-          enabled: enabled,
-          onMinus: work > 5 ? () => onChanged(work: work - 5) : null,
-          onPlus: work < 300 ? () => onChanged(work: work + 5) : null,
-        ),
-        _Stepper(
-          label: 'Rest',
-          value: '${rest}s',
-          enabled: enabled,
-          onMinus: rest > 0 ? () => onChanged(rest: rest - 5) : null,
-          onPlus: rest < 300 ? () => onChanged(rest: rest + 5) : null,
-        ),
-        _Stepper(
-          label: 'Rounds',
-          value: '$rounds',
-          enabled: enabled,
-          onMinus: rounds > 1 ? () => onChanged(rounds: rounds - 1) : null,
-          onPlus: rounds < 30 ? () => onChanged(rounds: rounds + 1) : null,
-        ),
-        SizedBox(height: 8.h),
-        Wrap(
-          spacing: 8.w,
-          children: [
-            ActionChip(
-              label: const Text('Tabata 20/10 × 8'),
-              onPressed: enabled
-                  ? () => onChanged(work: 20, rest: 10, rounds: 8)
-                  : null,
-            ),
-            ActionChip(
-              label: const Text('Circuit 40/20 × 5'),
-              onPressed: enabled
-                  ? () => onChanged(work: 40, rest: 20, rounds: 5)
-                  : null,
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-}
-
-class _Stepper extends StatelessWidget {
-  const _Stepper({
-    required this.label,
-    required this.value,
-    required this.enabled,
-    required this.onMinus,
-    required this.onPlus,
-  });
-
-  final String label;
-  final String value;
-  final bool enabled;
-  final VoidCallback? onMinus;
-  final VoidCallback? onPlus;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 4.h),
-      child: Row(
-        children: [
-          Expanded(
-            child: AppText(text: label, fWeight: FontWeight.w600, fSize: 15.sp),
-          ),
-          IconButton.filledTonal(
-            onPressed: enabled ? onMinus : null,
-            icon: const Icon(Icons.remove),
-          ),
-          SizedBox(
-            width: 64.w,
-            child: AppText(
-              text: value,
-              textAlign: TextAlign.center,
-              fWeight: FontWeight.bold,
-              fSize: 16.sp,
-            ),
-          ),
-          IconButton.filledTonal(
-            onPressed: enabled ? onPlus : null,
-            icon: const Icon(Icons.add),
-          ),
-        ],
       ),
     );
   }

@@ -1,3 +1,5 @@
+import 'package:calistracker/core/components/app_card.dart';
+import 'package:calistracker/core/constants/app_strings.dart';
 import 'package:calistracker/core/components/app_text.dart';
 import 'package:calistracker/core/themes/app_textstyles.dart';
 import 'package:flutter/material.dart';
@@ -8,11 +10,13 @@ class StatsRow extends StatelessWidget {
     super.key,
     required this.exercisesDone,
     required this.streak,
+    required this.bestStreak,
     required this.programsDone,
   });
 
   final int exercisesDone;
   final int streak;
+  final int bestStreak;
   final int programsDone;
 
   @override
@@ -23,21 +27,28 @@ class StatsRow extends StatelessWidget {
         Expanded(
           child: _Stat(
             value: exercisesDone,
-            label: 'Exercises',
+            label: AppStrings.exercises,
             icon: Icons.fitness_center,
           ),
         ),
         Expanded(
           child: _Stat(
             value: streak,
-            label: 'Day streak',
+            label: AppStrings.dayStreak,
             icon: Icons.local_fire_department,
           ),
         ),
         Expanded(
           child: _Stat(
+            value: bestStreak,
+            label: AppStrings.profileBestStreak,
+            icon: Icons.bolt,
+          ),
+        ),
+        Expanded(
+          child: _Stat(
             value: programsDone,
-            label: 'Programs',
+            label: AppStrings.profilePrograms,
             icon: Icons.emoji_events,
           ),
         ),
@@ -57,12 +68,8 @@ class _Stat extends StatelessWidget {
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
 
-    return Container(
+    return AppCard(
       padding: EdgeInsets.symmetric(vertical: 14.h),
-      decoration: BoxDecoration(
-        color: scheme.surfaceContainerHighest,
-        borderRadius: BorderRadius.circular(16.r),
-      ),
       child: Column(
         children: [
           Icon(icon, color: scheme.primary),

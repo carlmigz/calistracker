@@ -6,8 +6,10 @@ class SettingsRepositoryImpl implements SettingsRepository {
   const SettingsRepositoryImpl(this._prefs);
 
   static const defaultName = 'Athlete';
+  static const defaultWeeklyGoal = 3;
   static const _nameKey = 'display_name';
   static const _themeKey = 'theme_mode';
+  static const _goalKey = 'weekly_goal';
 
   final SharedPreferences _prefs;
 
@@ -24,9 +26,15 @@ class SettingsRepositoryImpl implements SettingsRepository {
   }
 
   @override
+  int get weeklyGoal => _prefs.getInt(_goalKey) ?? defaultWeeklyGoal;
+
+  @override
   Future<void> setDisplayName(String name) => _prefs.setString(_nameKey, name);
 
   @override
   Future<void> setThemeMode(ThemeMode mode) =>
       _prefs.setString(_themeKey, mode.name);
+
+  @override
+  Future<void> setWeeklyGoal(int days) => _prefs.setInt(_goalKey, days);
 }

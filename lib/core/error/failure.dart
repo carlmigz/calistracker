@@ -1,3 +1,4 @@
+import 'package:calistracker/core/constants/app_strings.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class Failure extends Equatable {
@@ -10,9 +11,9 @@ abstract class Failure extends Equatable {
 }
 
 class ParseFailure extends Failure {
-  const ParseFailure([super.message = 'Could not read the training data']);
+  const ParseFailure([super.message = AppStrings.parseFailure]);
 }
 
 class StorageFailure extends Failure {
-  const StorageFailure([super.message = 'Could not save your progress']);
+  const StorageFailure([super.message = AppStrings.storageFailure]);
 }

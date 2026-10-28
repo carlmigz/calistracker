@@ -8,14 +8,24 @@ abstract class ProgramsLocalDataSource {
 }
 
 class ProgramsLocalDataSourceImpl implements ProgramsLocalDataSource {
-  const ProgramsLocalDataSourceImpl({
-    this.assetPath = 'assets/data/programs.json',
-  });
+  ProgramsLocalDataSourceImpl({this.assetPath = 'assets/data/programs.json'});
 
   final String assetPath;
+  Future<List<ProgramModel>>? _programs;
 
   @override
-  Future<List<ProgramModel>> getPrograms() async {
+  Future<List<ProgramModel>> getPrograms() => _programs ??= _load();
+
+  Future<List<ProgramModel>> _load() async {
+    try {
+      return await _read();
+    } catch (_) {
+      _programs = null; // don't cache a failure; let the next request retry
+      rethrow;
+    }
+  }
+
+  Future<List<ProgramModel>> _read() async {
     final raw = await rootBundle.loadString(assetPath);
     final json = jsonDecode(raw) as Map<String, dynamic>;
     return (json['programs'] as List)

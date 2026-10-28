@@ -1,3 +1,5 @@
+import 'package:calistracker/core/constants/app_strings.dart';
+
 class Validators {
   Validators._();
 
@@ -10,23 +12,23 @@ class Validators {
 
   static String? emailValidator(String? value) {
     if (value == null || value.trim().isEmpty) {
-      return 'This field is required';
+      return AppStrings.fieldRequired;
     }
     if (!_emailRegex.hasMatch(value.trim())) {
-      return 'Enter valid email address';
+      return AppStrings.emailInvalid;
     }
     return null;
   }
 
   static String? passwordValidator(String? value) {
     if (value == null || value.isEmpty) {
-      return 'This field is required';
+      return AppStrings.fieldRequired;
     }
     if (value.contains(RegExp(r'\s'))) {
-      return 'Password must not contain spaces';
+      return AppStrings.passwordNoSpaces;
     }
     if (value.length < 8) {
-      return 'Password must be at least 8 characters';
+      return AppStrings.passwordTooShort;
     }
     return null;
   }
@@ -36,24 +38,26 @@ class Validators {
     String? originalPassword,
   ) {
     if (value == null || value.isEmpty) {
-      return 'Confirm your password';
+      return AppStrings.confirmPasswordRequired;
     }
     if (value != originalPassword) {
-      return 'Passwords do not match';
+      return AppStrings.passwordsDoNotMatch;
     }
     return null;
   }
 
-  static String? firstNameValidator(String? value) => _name(value, 'First');
+  static String? firstNameValidator(String? value) =>
+      _name(value, AppStrings.firstNameLabel);
 
-  static String? lastNameValidator(String? value) => _name(value, 'Last');
+  static String? lastNameValidator(String? value) =>
+      _name(value, AppStrings.lastNameLabel);
 
   static String? phoneValidator(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Phone number is required';
+      return AppStrings.phoneRequired;
     }
     if (!_phoneRegex.hasMatch(value)) {
-      return 'Enter a valid 10-digit phone number';
+      return AppStrings.phoneInvalid;
     }
     return null;
   }
@@ -61,13 +65,13 @@ class Validators {
   static String? _name(String? value, String label) {
     final name = value?.trim() ?? '';
     if (name.isEmpty) {
-      return '$label name is required';
+      return AppStrings.nameRequired(label);
     }
     if (name.length < 2) {
-      return '$label name must be at least 2 characters';
+      return AppStrings.nameTooShort(label);
     }
     if (!_nameRegex.hasMatch(name)) {
-      return 'Enter a valid ${label.toLowerCase()} name';
+      return AppStrings.nameInvalid(label);
     }
     return null;
   }

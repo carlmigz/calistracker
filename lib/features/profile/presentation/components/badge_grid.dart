@@ -1,3 +1,6 @@
+import 'package:calistracker/core/components/app_toast.dart';
+import 'package:calistracker/core/components/app_card.dart';
+import 'package:calistracker/core/constants/app_strings.dart';
 import 'package:calistracker/core/components/app_text.dart';
 import 'package:calistracker/features/progress/domain/entities/achievement.dart';
 import 'package:flutter/material.dart';
@@ -53,51 +56,41 @@ class _BadgeTile extends StatelessWidget {
     final unlocked = status.unlocked;
     final achievement = status.achievement;
 
-    return Material(
-      color: scheme.surfaceContainerHighest,
-      borderRadius: BorderRadius.circular(16.r),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(16.r),
-        onTap: () => toastification.show(
-          context: context,
-          type: unlocked ? ToastificationType.success : ToastificationType.info,
-          title: Text(achievement.title),
-          description: Text(
-            unlocked
-                ? achievement.description
-                : 'Locked: ${achievement.description}',
+    return AppCard(
+      onTap: () => showAppToast(
+        context,
+        achievement.title,
+        type: unlocked ? ToastificationType.success : ToastificationType.info,
+        description: unlocked
+            ? achievement.description
+            : AppStrings.profileBadgeLocked(achievement.description),
+      ),
+      padding: EdgeInsets.all(8.r),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          CircleAvatar(
+            radius: 22.r,
+            backgroundColor: unlocked
+                ? scheme.primary
+                : scheme.onSurface.withValues(alpha: 0.12),
+            foregroundColor: unlocked
+                ? scheme.onPrimary
+                : scheme.onSurface.withValues(alpha: 0.4),
+            child: Icon(unlocked ? _iconFor(achievement.id) : Icons.lock),
           ),
-          autoCloseDuration: const Duration(seconds: 3),
-        ),
-        child: Padding(
-          padding: EdgeInsets.all(8.r),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              CircleAvatar(
-                radius: 22.r,
-                backgroundColor: unlocked
-                    ? scheme.primary
-                    : scheme.onSurface.withValues(alpha: 0.12),
-                foregroundColor: unlocked
-                    ? scheme.onPrimary
-                    : scheme.onSurface.withValues(alpha: 0.4),
-                child: Icon(unlocked ? _iconFor(achievement.id) : Icons.lock),
-              ),
-              SizedBox(height: 6.h),
-              AppText(
-                text: achievement.title,
-                fSize: 11.sp,
-                fWeight: FontWeight.w600,
-                textAlign: TextAlign.center,
-                maxLines: 2,
-                textColor: unlocked
-                    ? null
-                    : scheme.onSurface.withValues(alpha: 0.5),
-              ),
-            ],
+          SizedBox(height: 6.h),
+          AppText(
+            text: achievement.title,
+            fSize: 11.sp,
+            fWeight: FontWeight.w600,
+            textAlign: TextAlign.center,
+            maxLines: 2,
+            textColor: unlocked
+                ? null
+                : scheme.onSurface.withValues(alpha: 0.5),
           ),
-        ),
+        ],
       ),
     );
   }

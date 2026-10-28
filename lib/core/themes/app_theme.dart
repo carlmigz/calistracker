@@ -1,6 +1,8 @@
+import 'package:calistracker/core/constants/app_sizes.dart';
 import 'package:calistracker/core/themes/app_colors.dart';
 import 'package:calistracker/core/themes/app_textstyles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class AppTheme {
   AppTheme._();
@@ -55,6 +57,12 @@ class AppTheme {
         backgroundColor: container,
         indicatorColor: AppColors.primary,
         labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
+      ),
+      listTileTheme: ListTileThemeData(
+        tileColor: field,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppSizes.cardRadius.r),
+        ),
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,

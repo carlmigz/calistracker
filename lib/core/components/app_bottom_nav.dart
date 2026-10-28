@@ -1,3 +1,4 @@
+import 'package:calistracker/core/constants/app_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -7,19 +8,31 @@ class AppBottomNav extends StatelessWidget {
   final StatefulNavigationShell shell;
 
   static const _tabs = [
-    (label: 'Home', icon: Icons.home_outlined, selectedIcon: Icons.home),
     (
-      label: 'Workouts',
+      label: AppStrings.navHome,
+      icon: Icons.home_outlined,
+      selectedIcon: Icons.home,
+    ),
+    (
+      label: AppStrings.navWorkouts,
       icon: Icons.fitness_center_outlined,
       selectedIcon: Icons.fitness_center,
     ),
-    (label: 'Timer', icon: Icons.timer_outlined, selectedIcon: Icons.timer),
     (
-      label: 'Progress',
+      label: AppStrings.navTimer,
+      icon: Icons.timer_outlined,
+      selectedIcon: Icons.timer,
+    ),
+    (
+      label: AppStrings.progress,
       icon: Icons.bar_chart_outlined,
       selectedIcon: Icons.bar_chart,
     ),
-    (label: 'Profile', icon: Icons.person_outline, selectedIcon: Icons.person),
+    (
+      label: AppStrings.profile,
+      icon: Icons.person_outline,
+      selectedIcon: Icons.person,
+    ),
   ];
 
   @override

@@ -13,7 +13,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class AppDependencies {
   AppDependencies(SharedPreferences prefs)
     : session = AppSession(prefs),
-      programsRepository = const ProgramsRepositoryImpl(
+      programsRepository = ProgramsRepositoryImpl(
         ProgramsLocalDataSourceImpl(),
       ),
       progressRepository = ProgressRepositoryImpl(

@@ -1,10 +1,12 @@
-import 'package:calistracker/core/components/app_text.dart';
+import 'package:calistracker/core/components/section_header.dart';
 import 'package:calistracker/core/constants/app_sizes.dart';
+import 'package:calistracker/core/constants/app_strings.dart';
 import 'package:calistracker/features/profile/presentation/bloc/settings_cubit.dart';
 import 'package:calistracker/features/profile/presentation/components/badge_grid.dart';
 import 'package:calistracker/features/profile/presentation/components/profile_header.dart';
 import 'package:calistracker/features/profile/presentation/components/settings_section.dart';
 import 'package:calistracker/features/profile/presentation/components/stats_row.dart';
+import 'package:calistracker/features/profile/presentation/components/weekly_goal_card.dart';
 import 'package:calistracker/features/progress/domain/entities/achievement.dart';
 import 'package:calistracker/features/progress/domain/entities/user_level.dart';
 import 'package:calistracker/features/progress/presentation/bloc/progress_bloc.dart';
@@ -30,9 +32,13 @@ class ProfilePage extends StatelessWidget {
     );
     final statuses = evaluateAchievements(achievementContext);
     final unlockedCount = statuses.where((s) => s.unlocked).length;
+    final activeDays = progress
+        .activityLast7Days(now)
+        .where((count) => count > 0)
+        .length;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Profile')),
+      appBar: AppBar(title: const Text(AppStrings.profile)),
       body: ListView(
         padding: AppSizes.bodyPadding,
         children: [
@@ -44,24 +50,21 @@ class ProfilePage extends StatelessWidget {
           StatsRow(
             exercisesDone: achievementContext.completedCount,
             streak: achievementContext.streak,
+            bestStreak: progress.longestStreak,
             programsDone: achievementContext.completedPrograms,
           ),
-          SizedBox(height: 24.h),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              AppText(text: 'Badges', fWeight: FontWeight.bold, fSize: 18.sp),
-              AppText(
-                text: '$unlockedCount / ${statuses.length}',
-                fSize: 12.sp,
-              ),
-            ],
+          SizedBox(height: 12.h),
+          WeeklyGoalCard(
+            activeDays: activeDays,
+            goal: settings.weeklyGoal,
+            onGoalChanged: context.read<SettingsCubit>().setWeeklyGoal,
           ),
-          SizedBox(height: 12.h),
+          SectionHeader(
+            title: AppStrings.profileBadges,
+            trailing: '$unlockedCount / ${statuses.length}',
+          ),
           BadgeGrid(statuses: statuses),
-          SizedBox(height: 24.h),
-          AppText(text: 'Settings', fWeight: FontWeight.bold, fSize: 18.sp),
-          SizedBox(height: 12.h),
+          const SectionHeader(title: AppStrings.profileSettings),
           SettingsSection(themeMode: settings.themeMode),
           SizedBox(height: 16.h),
         ],

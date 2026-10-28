@@ -1,3 +1,4 @@
+import 'package:calistracker/core/constants/app_strings.dart';
 import 'package:calistracker/app/app_dependencies.dart';
 import 'package:calistracker/app/app_providers.dart';
 import 'package:calistracker/core/router/app_router.dart';
@@ -35,7 +36,7 @@ class _CalisTrackerAppState extends State<CalisTrackerApp> {
     return AppProviders(
       dependencies: _dependencies,
       child: ToastificationWrapper(
-        config: ToastificationConfig(alignment: Alignment.center),
+        config: ToastificationConfig(alignment: Alignment.topCenter),
         child: ScreenUtilInit(
           designSize: const Size(390, 844),
           splitScreenMode: true,
@@ -43,7 +44,7 @@ class _CalisTrackerAppState extends State<CalisTrackerApp> {
           builder: (context, _) => BlocBuilder<SettingsCubit, SettingsState>(
             buildWhen: (a, b) => a.themeMode != b.themeMode,
             builder: (context, settings) => MaterialApp.router(
-              title: 'CalisTracker',
+              title: AppStrings.appName,
               debugShowCheckedModeBanner: false,
               theme: AppTheme.light,
               darkTheme: AppTheme.dark,

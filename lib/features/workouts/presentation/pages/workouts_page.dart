@@ -1,3 +1,4 @@
+import 'package:calistracker/core/constants/app_strings.dart';
 import 'package:calistracker/features/library/presentation/pages/library_view.dart';
 import 'package:calistracker/features/workouts/presentation/components/exercise_browser.dart';
 import 'package:flutter/material.dart';
@@ -11,11 +12,11 @@ class WorkoutsPage extends StatelessWidget {
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Workouts'),
+          title: const Text(AppStrings.navWorkouts),
           bottom: const TabBar(
             tabs: [
-              Tab(text: 'Exercises'),
-              Tab(text: 'Library'),
+              Tab(text: AppStrings.workoutsExercisesTab),
+              Tab(text: AppStrings.workoutsLibraryTab),
             ],
           ),
         ),

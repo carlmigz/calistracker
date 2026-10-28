@@ -58,7 +58,7 @@ class ProgressLocalDataSourceImpl implements ProgressLocalDataSource {
       for (final c in completions)
         '${c.exerciseId}|${c.completedAt.millisecondsSinceEpoch}',
     ]);
-    await _prefs.remove(_legacyKey);
+    if (_prefs.containsKey(_legacyKey)) await _prefs.remove(_legacyKey);
     return completions;
   }
 

@@ -11,31 +11,48 @@ class UserProgress extends Equatable {
   List<Completion> get _dated =>
       completions.where((c) => c.hasKnownDate).toList();
 
-  static DateTime _day(DateTime date, [int offsetDays = 0]) =>
+  /// Midnight of [date], shifted by [offsetDays].
+  static DateTime dayOf(DateTime date, [int offsetDays = 0]) =>
       DateTime(date.year, date.month, date.day + offsetDays);
 
   /// Consecutive days with a completion, ending today (or yesterday, so the
   /// streak isn't lost before the user has trained today).
   int currentStreak(DateTime now) {
-    final days = {for (final c in _dated) _day(c.completedAt)};
-    var day = _day(now);
-    if (!days.contains(day)) day = _day(now, -1);
+    final days = {for (final c in _dated) dayOf(c.completedAt)};
+    var day = dayOf(now);
+    if (!days.contains(day)) day = dayOf(now, -1);
 
     var streak = 0;
     while (days.contains(day)) {
       streak++;
-      day = _day(day, -1);
+      day = dayOf(day, -1);
     }
     return streak;
   }
 
+  /// Longest run of consecutive days with a completion, ever.
+  int get longestStreak {
+    final days = {for (final c in _dated) dayOf(c.completedAt)}.toList()
+      ..sort();
+
+    var longest = 0;
+    var run = 0;
+    DateTime? previous;
+    for (final day in days) {
+      run = previous != null && dayOf(previous, 1) == day ? run + 1 : 1;
+      if (run > longest) longest = run;
+      previous = day;
+    }
+    return longest;
+  }
+
   /// Completion counts for the last 7 days, oldest first (last entry = today).
   List<int> activityLast7Days(DateTime now) {
-    final dated = _dated;
-    return [
-      for (var i = 6; i >= 0; i--)
-        dated.where((c) => _day(c.completedAt) == _day(now, -i)).length,
-    ];
+    final counts = <DateTime, int>{};
+    for (final c in _dated) {
+      counts.update(dayOf(c.completedAt), (n) => n + 1, ifAbsent: () => 1);
+    }
+    return [for (var i = 6; i >= 0; i--) counts[dayOf(now, -i)] ?? 0];
   }
 
   /// Newest first.

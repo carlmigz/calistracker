@@ -1,9 +1,9 @@
-import 'package:calistracker/core/components/app_text.dart';
+import 'package:calistracker/core/constants/app_strings.dart';
 import 'package:calistracker/core/constants/app_sizes.dart';
 import 'package:calistracker/core/router/app_router.dart';
-import 'package:calistracker/core/themes/app_textstyles.dart';
 import 'package:calistracker/features/progress/presentation/bloc/progress_bloc.dart';
 import 'package:calistracker/features/programs/presentation/bloc/programs_bloc.dart';
+import 'package:calistracker/features/programs/presentation/components/program_exercise_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -24,10 +24,10 @@ class ProgramDetailPage extends StatelessWidget {
     );
 
     if (program == null) {
-      return const Scaffold(body: Center(child: Text('Program not found')));
+      return const Scaffold(
+        body: Center(child: Text(AppStrings.programNotFound)),
+      );
     }
-
-    final scheme = Theme.of(context).colorScheme;
 
     return Scaffold(
       appBar: AppBar(title: Text(program.name)),
@@ -37,35 +37,14 @@ class ProgramDetailPage extends StatelessWidget {
         separatorBuilder: (_, _) => SizedBox(height: 8.h),
         itemBuilder: (context, index) {
           final exercise = program.exercises[index];
-          final isDone = completed.contains(exercise.id);
-          final isUnlocked = program.isUnlocked(index, completed);
 
-          return Opacity(
-            opacity: isUnlocked ? 1 : 0.5,
-            child: ListTile(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16.r),
-              ),
-              tileColor: scheme.surfaceContainerHighest,
-              enabled: isUnlocked,
-              onTap: isUnlocked
-                  ? () => context.push(
-                      AppRoutes.exercise(program.id, exercise.id),
-                    )
-                  : null,
-              leading: CircleAvatar(
-                backgroundColor: isDone ? scheme.primary : scheme.surface,
-                foregroundColor: isDone ? scheme.onPrimary : scheme.onSurface,
-                child: isDone ? const Icon(Icons.check) : Text('${index + 1}'),
-              ),
-              title: AppText(
-                text: exercise.name,
-                fFamily: AppTextStyles.fontFamily,
-                fWeight: FontWeight.w600,
-              ),
-              subtitle: AppText(text: exercise.target, fSize: 12.sp),
-              trailing: Icon(isUnlocked ? Icons.chevron_right : Icons.lock),
-            ),
+          return ProgramExerciseTile(
+            exercise: exercise,
+            number: index + 1,
+            isDone: completed.contains(exercise.id),
+            isUnlocked: program.isUnlocked(index, completed),
+            onTap: () =>
+                context.push(AppRoutes.exercise(program.id, exercise.id)),
           );
         },
       ),

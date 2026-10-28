@@ -1,3 +1,4 @@
+import 'package:calistracker/core/constants/app_strings.dart';
 import 'package:calistracker/core/components/app_button.dart';
 import 'package:calistracker/core/components/app_text.dart';
 import 'package:calistracker/core/components/pose_image.dart';
@@ -26,8 +27,7 @@ class OnboardingPage extends StatelessWidget {
                   children: [
                     const Flexible(child: PoseImage()),
                     AppText(
-                      text:
-                          'Your free companion for mastering bodyweight training with CALISTRACKER',
+                      text: AppStrings.onboardingTagline,
                       fFamily: AppTextStyles.fontFamily,
                       fWeight: FontWeight.bold,
                       textAlign: TextAlign.center,
@@ -39,7 +39,7 @@ class OnboardingPage extends StatelessWidget {
               AppButton(
                 onPressed: () =>
                     context.read<AppSession>().completeOnboarding(),
-                text: 'Continue',
+                text: AppStrings.onboardingContinue,
               ),
             ],
           ),

@@ -1,3 +1,5 @@
+import 'package:calistracker/core/components/app_card.dart';
+import 'package:calistracker/core/constants/app_strings.dart';
 import 'package:calistracker/core/components/app_text.dart';
 import 'package:calistracker/core/themes/app_textstyles.dart';
 import 'package:flutter/material.dart';
@@ -19,12 +21,10 @@ class OverallProgressCard extends StatelessWidget {
     final value = total == 0 ? 0.0 : completed / total;
     final onPrimary = scheme.onPrimary;
 
-    return Container(
+    return AppCard(
       padding: EdgeInsets.all(16.r),
-      decoration: BoxDecoration(
-        color: scheme.primary,
-        borderRadius: BorderRadius.circular(20.r),
-      ),
+      color: scheme.primary,
+      large: true,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -33,7 +33,7 @@ class OverallProgressCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               AppText(
-                text: 'Your progress',
+                text: AppStrings.homeYourProgress,
                 textColor: onPrimary,
                 fWeight: FontWeight.w600,
               ),
@@ -57,7 +57,7 @@ class OverallProgressCard extends StatelessWidget {
           ),
           SizedBox(height: 8.h),
           AppText(
-            text: '$completed of $total exercises completed',
+            text: AppStrings.homeExercisesCompleted(completed, total),
             fSize: 12.sp,
             textColor: onPrimary,
           ),

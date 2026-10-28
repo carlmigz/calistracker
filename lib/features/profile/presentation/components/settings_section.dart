@@ -1,3 +1,5 @@
+import 'package:calistracker/core/components/app_card.dart';
+import 'package:calistracker/core/constants/app_strings.dart';
 import 'package:calistracker/core/components/app_button.dart';
 import 'package:calistracker/core/session/app_session.dart';
 import 'package:calistracker/features/profile/presentation/bloc/settings_cubit.dart';
@@ -16,19 +18,16 @@ class SettingsSection extends StatelessWidget {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Reset progress?'),
-        content: const Text(
-          'This clears every completed exercise, your streak and badges. '
-          'It cannot be undone.',
-        ),
+        title: const Text(AppStrings.settingsResetProgressTitle),
+        content: const Text(AppStrings.settingsResetProgressMessage),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel'),
+            child: const Text(AppStrings.cancel),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('Reset'),
+            child: const Text(AppStrings.reset),
           ),
         ],
       ),
@@ -38,21 +37,15 @@ class SettingsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Container(
+        AppCard(
           padding: EdgeInsets.all(12.r),
-          decoration: BoxDecoration(
-            color: scheme.surfaceContainerHighest,
-            borderRadius: BorderRadius.circular(16.r),
-          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text('Theme'),
+              const Text(AppStrings.settingsTheme),
               SizedBox(height: 8.h),
               SizedBox(
                 width: double.infinity,
@@ -61,10 +54,16 @@ class SettingsSection extends StatelessWidget {
                   segments: const [
                     ButtonSegment(
                       value: ThemeMode.system,
-                      label: Text('System'),
+                      label: Text(AppStrings.settingsThemeSystem),
                     ),
-                    ButtonSegment(value: ThemeMode.light, label: Text('Light')),
-                    ButtonSegment(value: ThemeMode.dark, label: Text('Dark')),
+                    ButtonSegment(
+                      value: ThemeMode.light,
+                      label: Text(AppStrings.settingsThemeLight),
+                    ),
+                    ButtonSegment(
+                      value: ThemeMode.dark,
+                      label: Text(AppStrings.settingsThemeDark),
+                    ),
                   ],
                   selected: {themeMode},
                   onSelectionChanged: (s) =>
@@ -76,32 +75,24 @@ class SettingsSection extends StatelessWidget {
         ),
         SizedBox(height: 8.h),
         ListTile(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16.r),
-          ),
-          tileColor: scheme.surfaceContainerHighest,
           leading: const Icon(Icons.restart_alt),
-          title: const Text('Reset progress'),
+          title: const Text(AppStrings.settingsResetProgress),
           onTap: () => _confirmReset(context),
         ),
         SizedBox(height: 8.h),
         ListTile(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16.r),
-          ),
-          tileColor: scheme.surfaceContainerHighest,
           leading: const Icon(Icons.info_outline),
-          title: const Text('About CalisTracker'),
+          title: const Text(AppStrings.settingsAbout),
           onTap: () => showAboutDialog(
             context: context,
-            applicationName: 'CalisTracker',
+            applicationName: AppStrings.appName,
             applicationVersion: '1.0.0',
-            applicationLegalese: 'A free beginner calisthenics companion.',
+            applicationLegalese: AppStrings.settingsLegalese,
           ),
         ),
         SizedBox(height: 16.h),
         AppButton(
-          text: 'Log out',
+          text: AppStrings.settingsLogOut,
           icon: Icons.logout,
           onPressed: () => context.read<AppSession>().logOut(),
         ),

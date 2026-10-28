@@ -5,13 +5,30 @@ import 'package:flutter/material.dart' show ThemeMode;
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SettingsState extends Equatable {
-  const SettingsState({required this.displayName, required this.themeMode});
+  const SettingsState({
+    required this.displayName,
+    required this.themeMode,
+    required this.weeklyGoal,
+  });
 
   final String displayName;
   final ThemeMode themeMode;
+  final int weeklyGoal;
+
+  SettingsState copyWith({
+    String? displayName,
+    ThemeMode? themeMode,
+    int? weeklyGoal,
+  }) {
+    return SettingsState(
+      displayName: displayName ?? this.displayName,
+      themeMode: themeMode ?? this.themeMode,
+      weeklyGoal: weeklyGoal ?? this.weeklyGoal,
+    );
+  }
 
   @override
-  List<Object?> get props => [displayName, themeMode];
+  List<Object?> get props => [displayName, themeMode, weeklyGoal];
 }
 
 class SettingsCubit extends Cubit<SettingsState> {
@@ -20,8 +37,12 @@ class SettingsCubit extends Cubit<SettingsState> {
         SettingsState(
           displayName: _repository.displayName,
           themeMode: _repository.themeMode,
+          weeklyGoal: _repository.weeklyGoal,
         ),
       );
+
+  static const minWeeklyGoal = 1;
+  static const maxWeeklyGoal = 7;
 
   final SettingsRepository _repository;
 
@@ -31,11 +52,17 @@ class SettingsCubit extends Cubit<SettingsState> {
         ? SettingsRepositoryImpl.defaultName
         : trimmed;
     await _repository.setDisplayName(value);
-    emit(SettingsState(displayName: value, themeMode: state.themeMode));
+    emit(state.copyWith(displayName: value));
   }
 
   Future<void> setThemeMode(ThemeMode mode) async {
     await _repository.setThemeMode(mode);
-    emit(SettingsState(displayName: state.displayName, themeMode: mode));
+    emit(state.copyWith(themeMode: mode));
+  }
+
+  Future<void> setWeeklyGoal(int days) async {
+    final value = days.clamp(minWeeklyGoal, maxWeeklyGoal);
+    await _repository.setWeeklyGoal(value);
+    emit(state.copyWith(weeklyGoal: value));
   }
 }

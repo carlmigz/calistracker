@@ -1,6 +1,8 @@
+import 'package:calistracker/core/constants/app_strings.dart';
 import 'package:calistracker/core/components/app_text.dart';
 import 'package:calistracker/core/components/pose_image.dart';
 import 'package:calistracker/core/themes/app_textstyles.dart';
+import 'package:calistracker/features/profile/presentation/components/edit_name_dialog.dart';
 import 'package:calistracker/features/profile/presentation/bloc/settings_cubit.dart';
 import 'package:calistracker/features/progress/domain/entities/user_level.dart';
 import 'package:flutter/material.dart';
@@ -15,33 +17,7 @@ class ProfileHeader extends StatelessWidget {
 
   Future<void> _editName(BuildContext context) async {
     final cubit = context.read<SettingsCubit>();
-    final controller = TextEditingController(text: name);
-
-    final result = await showDialog<String>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Your name'),
-        content: TextField(
-          controller: controller,
-          autofocus: true,
-          maxLength: 20,
-          textCapitalization: TextCapitalization.words,
-          onSubmitted: (v) => Navigator.pop(context, v),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context, controller.text),
-            child: const Text('Save'),
-          ),
-        ],
-      ),
-    );
-    controller.dispose();
-
+    final result = await showEditNameDialog(context, name);
     if (result != null) cubit.setDisplayName(result);
   }
 
@@ -81,7 +57,7 @@ class ProfileHeader extends StatelessWidget {
               ),
             ),
             IconButton(
-              tooltip: 'Edit name',
+              tooltip: AppStrings.profileEditName,
               onPressed: () => _editName(context),
               icon: const Icon(Icons.edit_outlined, size: 20),
             ),
@@ -108,8 +84,8 @@ class ProfileHeader extends StatelessWidget {
         SizedBox(height: 6.h),
         AppText(
           text: level.isMax
-              ? 'Top level reached'
-              : '${level.remaining} more exercise${level.remaining == 1 ? '' : 's'} to ${level.nextName}',
+              ? AppStrings.profileTopLevel
+              : AppStrings.profileMoreToLevel(level.remaining, level.nextName),
           fSize: 12.sp,
         ),
       ],
