@@ -17,21 +17,19 @@ class SettingsState extends Equatable {
     required this.defaultRestSeconds,
   });
 
-  /// Avatar pose choices; the empty path is the default mascot.
+  /// Avatar choices from `assets/icons`; the empty path is the default mascot.
   static const avatarAssets = [
     '',
-    'assets/images/01_push_up.png',
-    'assets/images/02_diamond_push_up.png',
-    'assets/images/03_decline_push_up.png',
-    'assets/images/04_pike_push_up.png',
-    'assets/images/05_handstand_push_up.png',
-    'assets/images/06_pull_up.png',
-    'assets/images/07_chin_up.png',
-    'assets/images/08_l_sit.png',
-    'assets/images/09_front_lever.png',
-    'assets/images/10_pistol_squat.png',
-    'assets/images/11_handstand.png',
-    'assets/images/12_hanging_leg_raise.png',
+    'assets/icons/avatar_01_fighting_stance.png',
+    'assets/icons/avatar_02_punching.png',
+    'assets/icons/avatar_03_kicking.png',
+    'assets/icons/avatar_04_power_up.png',
+    'assets/icons/avatar_05_crouching.png',
+    'assets/icons/avatar_06_cross_armed.png',
+    'assets/icons/avatar_07_looking_back.png',
+    'assets/icons/avatar_08_running.png',
+    'assets/icons/avatar_09_defending.png',
+    'assets/icons/avatar_10_victory.png',
   ];
 
   /// Avatar background choices; the first is the brand yellow.
@@ -54,8 +52,12 @@ class SettingsState extends Equatable {
   final bool soundEnabled;
   final int defaultRestSeconds;
 
-  /// The pose to show, or null for the default mascot.
-  String? get avatarPose => avatarAsset.isEmpty ? null : avatarAsset;
+  /// The avatar to show, or null for the default mascot. Choices saved by an
+  /// older version (no longer offered) also fall back to the mascot.
+  String? get avatarPose =>
+      avatarAsset.isEmpty || !avatarAssets.contains(avatarAsset)
+      ? null
+      : avatarAsset;
 
   Color get avatarColor =>
       avatarColors[avatarColorIndex.clamp(0, avatarColors.length - 1)];

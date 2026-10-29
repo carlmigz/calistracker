@@ -122,6 +122,23 @@ abstract final class AppStrings {
   static String exerciseTarget(String target, String muscles) =>
       'Target: $target  •  $muscles';
   static String exerciseSets(int done, int total) => 'Sets: $done / $total';
+  static String exerciseSetOf(int current, int total) =>
+      'Set $current of $total';
+  static String exerciseRepsGoal(int? reps) => '$reps reps';
+  static String exerciseHoldGoal(int? seconds) => '${seconds}s hold';
+  static const exerciseRest = 'Rest';
+  static const exerciseResting = 'Resting…';
+  static const exerciseSkipRest = 'Skip rest';
+  static const exerciseRestHint = 'Shake it out and breathe';
+  static const exerciseUndoSet = 'Undo last set';
+  static const exerciseAllSetsDone = 'All sets done';
+  static const exerciseAllSetsHint = 'Great work. Mark it as done to save it.';
+  static const exerciseHoldGo = 'Hold';
+  static const exerciseCompleteTitle = 'Exercise complete!';
+  static String exerciseTime(String time) => 'Time: $time';
+  static String exerciseNext(String name) => 'Next: $name';
+  static const exerciseProgramDone = 'You finished this whole progression!';
+  static const exerciseDone = 'Done';
   static String exerciseHolding(int secondsLeft) => 'Hold… ${secondsLeft}s';
   static String exerciseStartHold(int? seconds) => 'Start hold (${seconds}s)';
   static String exerciseCompleteSet(int? reps) => 'Complete set ($reps reps)';

@@ -21,7 +21,7 @@ class EditProfilePage extends HookWidget {
     final current = context.read<SettingsCubit>().state;
     final name = useTextEditingController(text: current.displayName);
     final colorIndex = useState(current.avatarColorIndex);
-    final asset = useState(current.avatarAsset);
+    final asset = useState(current.avatarPose ?? '');
     final scheme = Theme.of(context).colorScheme;
     final color = SettingsState.avatarColors[colorIndex.value];
 

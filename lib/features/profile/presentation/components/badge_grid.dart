@@ -21,6 +21,30 @@ IconData _iconFor(String id) {
       return Icons.local_fire_department;
     case 'streak_7':
       return Icons.bolt;
+    case 'ten_club':
+      return Icons.looks_one;
+    case 'completionist':
+      return Icons.verified;
+    case 'streak_14':
+      return Icons.whatshot;
+    case 'streak_30':
+      return Icons.workspace_premium;
+    case 'sessions_25':
+      return Icons.repeat;
+    case 'sessions_100':
+      return Icons.military_tech;
+    case 'triple_threat':
+      return Icons.filter_3;
+    case 'power_day':
+      return Icons.flash_on;
+    case 'active_10':
+      return Icons.event_available;
+    case 'early_bird':
+      return Icons.wb_sunny;
+    case 'night_owl':
+      return Icons.nightlight_round;
+    case 'weekend_warrior':
+      return Icons.weekend;
     default:
       return Icons.star;
   }

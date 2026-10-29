@@ -1,11 +1,13 @@
 import 'package:calistracker/core/constants/app_sizes.dart';
 import 'package:calistracker/core/constants/app_strings.dart';
+import 'package:calistracker/features/profile/presentation/bloc/settings_cubit.dart';
 import 'package:calistracker/features/programs/domain/entities/exercise.dart';
 import 'package:calistracker/features/programs/presentation/bloc/programs_bloc.dart';
 import 'package:calistracker/features/workout/presentation/bloc/workout_cubit.dart';
 import 'package:calistracker/features/workout/presentation/components/exercise_action_bar.dart';
 import 'package:calistracker/features/workout/presentation/components/exercise_header.dart';
 import 'package:calistracker/features/workout/presentation/components/exercise_steps.dart';
+import 'package:calistracker/features/workout/presentation/components/workout_status_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -33,16 +35,26 @@ class ExercisePage extends StatelessWidget {
       );
     }
 
+    final settings = context.read<SettingsCubit>().state;
+
     return BlocProvider(
-      create: (_) => WorkoutCubit(exercise),
-      child: _ExerciseView(exercise: exercise),
+      // Keyed so "Next exercise" gets a fresh session.
+      key: ValueKey(exerciseId),
+      create: (_) => WorkoutCubit(
+        exercise,
+        restSeconds: settings.defaultRestSeconds,
+        haptics: settings.hapticsEnabled,
+        sound: settings.soundEnabled,
+      ),
+      child: _ExerciseView(programId: programId, exercise: exercise),
     );
   }
 }
 
 class _ExerciseView extends StatelessWidget {
-  const _ExerciseView({required this.exercise});
+  const _ExerciseView({required this.programId, required this.exercise});
 
+  final String programId;
   final Exercise exercise;
 
   @override
@@ -54,10 +66,16 @@ class _ExerciseView extends StatelessWidget {
         children: [
           ExerciseHeader(exercise: exercise),
           SizedBox(height: 16.h),
+          WorkoutStatusCard(exercise: exercise),
+          SizedBox(height: 20.h),
           ExerciseSteps(steps: exercise.steps),
+          SizedBox(height: 8.h),
         ],
       ),
-      bottomNavigationBar: ExerciseActionBar(exercise: exercise),
+      bottomNavigationBar: ExerciseActionBar(
+        programId: programId,
+        exercise: exercise,
+      ),
     );
   }
 }
