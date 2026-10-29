@@ -69,7 +69,8 @@ class SettingsRepositoryImpl implements SettingsRepository {
       _prefs.setInt(_dailyGoalKey, exercises);
 
   @override
-  Future<void> setAvatarColorIndex(int index) => _prefs.setInt(_avatarKey, index);
+  Future<void> setAvatarColorIndex(int index) =>
+      _prefs.setInt(_avatarKey, index);
 
   @override
   Future<void> setAvatarAsset(String asset) =>

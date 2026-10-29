@@ -5,7 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-Future<bool> _confirm(BuildContext context, String title, String message) async {
+Future<bool> _confirm(
+  BuildContext context,
+  String title,
+  String message,
+) async {
   final confirmed = await showDialog<bool>(
     context: context,
     builder: (context) => AlertDialog(

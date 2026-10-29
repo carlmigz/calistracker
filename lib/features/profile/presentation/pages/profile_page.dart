@@ -204,10 +204,8 @@ class ProfilePage extends StatelessWidget {
                 icon: Icons.copy_all_outlined,
                 title: AppStrings.settingsExport,
                 showChevron: false,
-                onTap: () => copySummary(
-                  context,
-                  data.summary(AppStrings.appName),
-                ),
+                onTap: () =>
+                    copySummary(context, data.summary(AppStrings.appName)),
               ),
               ProfileTile(
                 icon: Icons.restart_alt,

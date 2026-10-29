@@ -83,8 +83,7 @@ class TimerPreferencesCard extends StatelessWidget {
                       ChoiceChip(
                         label: Text('${seconds}s'),
                         selected: settings.defaultRestSeconds == seconds,
-                        onSelected: (_) =>
-                            cubit.setDefaultRestSeconds(seconds),
+                        onSelected: (_) => cubit.setDefaultRestSeconds(seconds),
                       ),
                   ],
                 ),

@@ -24,7 +24,11 @@ class PersonalRecords extends StatelessWidget {
     final records = [
       (Icons.whatshot_rounded, bestDay, AppStrings.profileRecordBestDay),
       (Icons.repeat_rounded, sessions, AppStrings.profileRecordSessions),
-      (Icons.event_available_rounded, activeDays, AppStrings.profileRecordActiveDays),
+      (
+        Icons.event_available_rounded,
+        activeDays,
+        AppStrings.profileRecordActiveDays,
+      ),
       (Icons.bolt_rounded, longestStreak, AppStrings.profileRecordLongest),
     ];
     final scheme = Theme.of(context).colorScheme;

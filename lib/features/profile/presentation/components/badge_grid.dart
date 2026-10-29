@@ -1,13 +1,11 @@
-import 'package:calistracker/core/components/app_toast.dart';
 import 'package:calistracker/core/components/app_card.dart';
-import 'package:calistracker/core/constants/app_strings.dart';
 import 'package:calistracker/core/components/app_text.dart';
+import 'package:calistracker/features/profile/presentation/pages/badge_detail_page.dart';
 import 'package:calistracker/features/progress/domain/entities/achievement.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:toastification/toastification.dart';
 
-IconData _iconFor(String id) {
+IconData achievementIcon(String id) {
   switch (id) {
     case 'first_step':
       return Icons.flag;
@@ -45,6 +43,10 @@ IconData _iconFor(String id) {
       return Icons.nightlight_round;
     case 'weekend_warrior':
       return Icons.weekend;
+    case 'sigma':
+      return Icons.self_improvement;
+    case 'giga_chad':
+      return Icons.fitness_center;
     default:
       return Icons.star;
   }
@@ -64,15 +66,22 @@ class BadgeGrid extends StatelessWidget {
       mainAxisSpacing: 10.h,
       crossAxisSpacing: 10.w,
       childAspectRatio: 0.9,
-      children: [for (final status in statuses) _BadgeTile(status: status)],
+      children: [
+        for (var i = 0; i < statuses.length; i++)
+          _BadgeTile(
+            status: statuses[i],
+            onTap: () => BadgeDetailPage.open(context, i),
+          ),
+      ],
     );
   }
 }
 
 class _BadgeTile extends StatelessWidget {
-  const _BadgeTile({required this.status});
+  const _BadgeTile({required this.status, required this.onTap});
 
   final AchievementStatus status;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -81,14 +90,7 @@ class _BadgeTile extends StatelessWidget {
     final achievement = status.achievement;
 
     return AppCard(
-      onTap: () => showAppToast(
-        context,
-        achievement.title,
-        type: unlocked ? ToastificationType.success : ToastificationType.info,
-        description: unlocked
-            ? achievement.description
-            : AppStrings.profileBadgeLocked(achievement.description),
-      ),
+      onTap: onTap,
       padding: EdgeInsets.all(8.r),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -101,7 +103,7 @@ class _BadgeTile extends StatelessWidget {
             foregroundColor: unlocked
                 ? scheme.onPrimary
                 : scheme.onSurface.withValues(alpha: 0.4),
-            child: Icon(unlocked ? _iconFor(achievement.id) : Icons.lock),
+            child: Icon(unlocked ? achievementIcon(achievement.id) : Icons.lock),
           ),
           SizedBox(height: 6.h),
           AppText(

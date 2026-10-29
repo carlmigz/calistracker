@@ -46,6 +46,7 @@ GoRouter createRouter(AppSession session) {
     navigatorKey: _rootNavigatorKey,
     initialLocation: AppRoutes.home,
     refreshListenable: session.changes,
+    debugLogDiagnostics: true,
     redirect: (context, state) {
       final location = state.matchedLocation;
 
