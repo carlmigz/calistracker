@@ -26,6 +26,7 @@ class HomePage extends StatelessWidget {
                     programs: programsState.programs,
                     total: programsState.totalExercises,
                     completed: progress.completed,
+                    progress: progress.progress,
                   ),
                 );
             }

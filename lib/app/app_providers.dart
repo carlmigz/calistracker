@@ -2,6 +2,7 @@ import 'package:calistracker/app/app_dependencies.dart';
 import 'package:calistracker/features/profile/presentation/bloc/settings_cubit.dart';
 import 'package:calistracker/features/progress/domain/usecases/complete_exercise.dart';
 import 'package:calistracker/features/progress/domain/usecases/get_progress.dart';
+import 'package:calistracker/features/progress/domain/usecases/reset_exercises.dart';
 import 'package:calistracker/features/progress/domain/usecases/reset_progress.dart';
 import 'package:calistracker/features/progress/presentation/bloc/progress_bloc.dart';
 import 'package:calistracker/features/programs/domain/usecases/get_programs.dart';
@@ -38,6 +39,7 @@ class AppProviders extends StatelessWidget {
             GetProgress(dependencies.progressRepository),
             CompleteExercise(dependencies.progressRepository),
             ResetProgress(dependencies.progressRepository),
+            ResetExercises(dependencies.progressRepository),
           )..add(const ProgressRequested()),
         ),
       ],

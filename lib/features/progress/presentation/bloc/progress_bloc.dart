@@ -3,6 +3,7 @@ import 'package:calistracker/core/usecases/usecase.dart';
 import 'package:calistracker/features/progress/domain/entities/user_progress.dart';
 import 'package:calistracker/features/progress/domain/usecases/complete_exercise.dart';
 import 'package:calistracker/features/progress/domain/usecases/get_progress.dart';
+import 'package:calistracker/features/progress/domain/usecases/reset_exercises.dart';
 import 'package:calistracker/features/progress/domain/usecases/reset_progress.dart';
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
@@ -12,8 +13,15 @@ part 'progress_event.dart';
 part 'progress_state.dart';
 
 class ProgressBloc extends Bloc<ProgressEvent, ProgressState> {
-  ProgressBloc(this._getProgress, this._completeExercise, this._resetProgress)
-    : super(const ProgressState()) {
+  ProgressBloc(
+    this._getProgress,
+    this._completeExercise,
+    this._resetProgress,
+    this._resetExercises,
+  ) : super(const ProgressState()) {
+    on<ExercisesReset>((event, emit) async {
+      _emitResult(emit, await _resetExercises(event.exerciseIds));
+    });
     on<ProgressRequested>((event, emit) async {
       _emitResult(emit, await _getProgress(const NoParams()));
     });
@@ -28,6 +36,7 @@ class ProgressBloc extends Bloc<ProgressEvent, ProgressState> {
   final GetProgress _getProgress;
   final CompleteExercise _completeExercise;
   final ResetProgress _resetProgress;
+  final ResetExercises _resetExercises;
 
   void _emitResult(
     Emitter<ProgressState> emit,

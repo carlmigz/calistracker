@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 abstract class ProgressLocalDataSource {
   List<Completion> getCompletions();
   Future<List<Completion>> addCompletion(String exerciseId, DateTime at);
+  Future<List<Completion>> removeExercises(Set<String> exerciseIds);
   Future<List<Completion>> clear();
 }
 
@@ -60,6 +61,22 @@ class ProgressLocalDataSourceImpl implements ProgressLocalDataSource {
     ]);
     if (_prefs.containsKey(_legacyKey)) await _prefs.remove(_legacyKey);
     return completions;
+  }
+
+  @override
+  Future<List<Completion>> removeExercises(Set<String> exerciseIds) async {
+    final remaining = [
+      for (final c in getCompletions())
+        if (!exerciseIds.contains(c.exerciseId)) c,
+    ];
+
+    await _prefs.setStringList(_completionsKey, [
+      for (final c in remaining)
+        '${c.exerciseId}|${c.completedAt.millisecondsSinceEpoch}',
+    ]);
+    // Legacy entries were merged into [remaining] above.
+    if (_prefs.containsKey(_legacyKey)) await _prefs.remove(_legacyKey);
+    return remaining;
   }
 
   @override

@@ -67,7 +67,12 @@ class TimerState extends Equatable {
 
 /// Countdown for a single rest (`rest: 0, rounds: 1`) or work/rest intervals.
 class TimerCubit extends Cubit<TimerState> {
-  TimerCubit() : super(const TimerState());
+  TimerCubit({this.haptics = true, this.sound = false})
+    : super(const TimerState());
+
+  /// Feedback played when a phase ends (from the profile settings).
+  final bool haptics;
+  final bool sound;
 
   Timer? _timer;
 
@@ -128,7 +133,8 @@ class TimerCubit extends Cubit<TimerState> {
       return;
     }
 
-    HapticFeedback.mediumImpact();
+    if (haptics) HapticFeedback.mediumImpact();
+    if (sound) SystemSound.play(SystemSoundType.alert);
 
     if (state.phase == TimerPhase.work) {
       if (state.round >= state.rounds) {

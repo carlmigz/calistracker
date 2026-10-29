@@ -9,4 +9,7 @@ abstract class ProgressRepository {
   Future<Either<Failure, UserProgress>> completeExercise(String exerciseId);
 
   Future<Either<Failure, UserProgress>> resetProgress();
+
+  /// Removes every completion of the given exercises.
+  Future<Either<Failure, UserProgress>> resetExercises(Set<String> exerciseIds);
 }

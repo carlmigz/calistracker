@@ -1,25 +1,30 @@
-import 'package:calistracker/core/constants/app_strings.dart';
 import 'package:calistracker/core/components/app_text.dart';
-import 'package:calistracker/core/components/pose_image.dart';
+import 'package:calistracker/core/constants/app_strings.dart';
+import 'package:calistracker/core/router/app_router.dart';
 import 'package:calistracker/core/themes/app_textstyles.dart';
-import 'package:calistracker/features/profile/presentation/components/edit_name_dialog.dart';
-import 'package:calistracker/features/profile/presentation/bloc/settings_cubit.dart';
+import 'package:calistracker/features/profile/presentation/components/profile_avatar.dart';
 import 'package:calistracker/features/progress/domain/entities/user_level.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 
 class ProfileHeader extends StatelessWidget {
-  const ProfileHeader({super.key, required this.name, required this.level});
+  const ProfileHeader({
+    super.key,
+    required this.name,
+    required this.level,
+    required this.avatarColor,
+    this.avatarAsset,
+    this.memberSince,
+  });
 
   final String name;
   final UserLevel level;
+  final Color avatarColor;
+  final String? avatarAsset;
 
-  Future<void> _editName(BuildContext context) async {
-    final cubit = context.read<SettingsCubit>();
-    final result = await showEditNameDialog(context, name);
-    if (result != null) cubit.setDisplayName(result);
-  }
+  /// Formatted date of the first workout, if there is one.
+  final String? memberSince;
 
   @override
   Widget build(BuildContext context) {
@@ -27,42 +32,16 @@ class ProfileHeader extends StatelessWidget {
 
     return Column(
       children: [
-        Container(
-          width: 112.r,
-          height: 112.r,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: scheme.primary,
-            border: Border.all(color: scheme.primary, width: 3),
-          ),
-          child: ClipOval(
-            child: Transform.scale(
-              scale: 1.9,
-              alignment: const Alignment(0, -0.85),
-              child: const PoseImage(),
-            ),
-          ),
-        ),
+        ProfileAvatar(size: 104.r, color: avatarColor, asset: avatarAsset),
         SizedBox(height: 12.h),
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Flexible(
-              child: AppText(
-                text: name,
-                fFamily: AppTextStyles.headingFontFamily,
-                fSize: 20.sp,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-            IconButton(
-              tooltip: AppStrings.profileEditName,
-              onPressed: () => _editName(context),
-              icon: const Icon(Icons.edit_outlined, size: 20),
-            ),
-          ],
+        AppText(
+          text: name,
+          fFamily: AppTextStyles.headingFontFamily,
+          fSize: 20.sp,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
         ),
+        SizedBox(height: 6.h),
         Container(
           padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 4.h),
           decoration: BoxDecoration(
@@ -76,17 +55,19 @@ class ProfileHeader extends StatelessWidget {
             textColor: scheme.onPrimary,
           ),
         ),
-        SizedBox(height: 16.h),
-        ClipRRect(
-          borderRadius: BorderRadius.circular(8.r),
-          child: LinearProgressIndicator(value: level.progress, minHeight: 8.h),
-        ),
-        SizedBox(height: 6.h),
-        AppText(
-          text: level.isMax
-              ? AppStrings.profileTopLevel
-              : AppStrings.profileMoreToLevel(level.remaining, level.nextName),
-          fSize: 12.sp,
+        if (memberSince != null) ...[
+          SizedBox(height: 6.h),
+          AppText(
+            text: AppStrings.profileTrainingSince(memberSince!),
+            fSize: 12.sp,
+            textColor: scheme.onSurface.withValues(alpha: 0.7),
+          ),
+        ],
+        SizedBox(height: 12.h),
+        OutlinedButton.icon(
+          onPressed: () => context.push(AppRoutes.editProfile),
+          icon: const Icon(Icons.edit_outlined, size: 18),
+          label: const Text(AppStrings.profileEditName),
         ),
       ],
     );

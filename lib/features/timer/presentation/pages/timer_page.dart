@@ -1,6 +1,7 @@
 import 'package:calistracker/core/constants/app_strings.dart';
 import 'package:calistracker/core/components/app_button.dart';
 import 'package:calistracker/core/constants/app_sizes.dart';
+import 'package:calistracker/features/profile/presentation/bloc/settings_cubit.dart';
 import 'package:calistracker/features/timer/presentation/bloc/timer_cubit.dart';
 import 'package:calistracker/features/timer/presentation/components/interval_settings.dart';
 import 'package:calistracker/features/timer/presentation/components/rest_presets.dart';
@@ -17,19 +18,27 @@ class TimerPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(create: (_) => TimerCubit(), child: const _TimerView());
+    final settings = context.read<SettingsCubit>().state;
+
+    return BlocProvider(
+      create: (_) => TimerCubit(
+        haptics: settings.hapticsEnabled,
+        sound: settings.soundEnabled,
+      ),
+      child: _TimerView(defaultRestSeconds: settings.defaultRestSeconds),
+    );
   }
 }
 
 class _TimerView extends HookWidget {
-  const _TimerView();
+  const _TimerView({required this.defaultRestSeconds});
 
-  static const _restPresets = [30, 60, 90, 120, 180];
+  final int defaultRestSeconds;
 
   @override
   Widget build(BuildContext context) {
     final mode = useState(_TimerMode.rest);
-    final restSeconds = useState(60);
+    final restSeconds = useState(defaultRestSeconds);
     final intervalWork = useState(40);
     final intervalRest = useState(20);
     final intervalRounds = useState(5);
@@ -53,6 +62,12 @@ class _TimerView extends HookWidget {
       intervalRounds.value = rounds ?? intervalRounds.value;
       apply();
     }
+
+    // Open with the user's default rest time.
+    useEffect(() {
+      apply();
+      return null;
+    }, const []);
 
     return Scaffold(
       appBar: AppBar(title: const Text(AppStrings.navTimer)),
@@ -126,7 +141,7 @@ class _TimerView extends HookWidget {
                 SizedBox(height: 24.h),
                 if (mode.value == _TimerMode.rest)
                   RestPresets(
-                    presets: _restPresets,
+                    presets: SettingsCubit.restPresets,
                     selected: restSeconds.value,
                     enabled: state.isIdle,
                     onSelected: (s) {

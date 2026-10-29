@@ -21,6 +21,11 @@ class ProgressRepositoryImpl implements ProgressRepository {
   @override
   Future<Either<Failure, UserProgress>> resetProgress() => _guard(_local.clear);
 
+  @override
+  Future<Either<Failure, UserProgress>> resetExercises(
+    Set<String> exerciseIds,
+  ) => _guard(() => _local.removeExercises(exerciseIds));
+
   Future<Either<Failure, UserProgress>> _guard(
     Future<List<Completion>> Function() action,
   ) async {

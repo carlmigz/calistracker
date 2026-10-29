@@ -38,7 +38,7 @@ class ProgressPage extends StatelessWidget {
                 ),
               ),
               Expanded(
-                child: StatCard(
+                  child: StatCard(
                   icon: Icons.check_circle_outline,
                   value: '${progress.completions.length}',
                   label: AppStrings.progressSessionsDone,

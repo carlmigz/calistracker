@@ -65,6 +65,36 @@ abstract final class AppStrings {
   static const homeYourProgress = 'Your progress';
   static String homeExercisesCompleted(int completed, int total) =>
       '$completed of $total exercises completed';
+  static const homeYourLevel = 'Your level';
+  static const homeQuickActions = 'Quick actions';
+  static const homeWelcomeTitle = 'Welcome to CalisTracker!';
+  static const homeWelcomeBody =
+      'Finish your first exercise to start your streak and fill in your stats.';
+  static const homeStreak = 'Day streak';
+  static String homeBestStreak(int days) => 'Best: $days';
+  static const homeDailyGoal = 'Daily goal';
+  static String homeDailyGoalCount(int done, int goal) => '$done / $goal done';
+  static const homeThisWeek = 'This week';
+  static String homeWeekDays(int active, int goal) =>
+      '$active / $goal days';
+  static String homeLevel(String name) => 'Level · $name';
+  static String homeToNextLevel(int remaining, String next) =>
+      '$remaining more to $next';
+  static const homeMaxLevel = 'Top level reached';
+  static String homeAchievements(int unlocked, int total) =>
+      '$unlocked / $total achievements';
+  static const homeSessions = 'Sessions';
+  static const homeExercisesDone = 'Exercises';
+  static const homeActiveDays = 'Active days';
+  static const homeQuickTimer = 'Timer';
+  static const homeQuickWorkouts = 'Workouts';
+  static const homeQuickProgress = 'Progress';
+  static const homeRecommended = 'Recommended for you';
+  static const homeTipOfTheDay = 'Tip of the day';
+  static const homeRecentActivity = 'Recent activity';
+  static const homeToday = 'Today';
+  static const homeYesterday = 'Yesterday';
+  static String homeDaysAgo(int days) => '$days days ago';
 
   // Workouts
   static const workoutsExercisesTab = exercises;
@@ -124,7 +154,7 @@ abstract final class AppStrings {
   static const profileBadges = 'Badges';
   static const profileSettings = 'Settings';
   static const profileYourName = 'Your name';
-  static const profileEditName = 'Edit name';
+  static const profileEditName = 'Edit profile';
   static const profileTopLevel = 'Top level reached';
   static String profileMoreToLevel(int remaining, String? nextName) =>
       '$remaining more exercise${remaining == 1 ? '' : 's'} to $nextName';
@@ -139,7 +169,59 @@ abstract final class AppStrings {
   static String profileGoalProgress(int active, int goal) =>
       '$active of $goal active days (last 7 days)';
   static String profileGoalDays(int days) => days == 1 ? '1 day' : '$days days';
-  static const settingsResetProgressTitle = 'Reset progress?';
+  static const profileEditTitle = 'Edit profile';
+  static const profileDisplayName = 'Display name';
+  static const profileAvatar = 'Avatar';
+  static const profileGroupProgress = 'Progress';
+  static const profileStatsRecords = 'Stats & records';
+  static String profileStatsSubtitle(int exercises, int bestStreak) =>
+      '$exercises exercises · best streak $bestStreak';
+  static const profileHeatmapSubtitle = 'Your last 12 weeks';
+  static String profileRoadmapSubtitle(String level) => 'You are $level';
+  static String profileProgramsSubtitle(int done, int total) =>
+      '$done of $total exercises done';
+  static String profileBadgesSubtitle(int unlocked, int total) =>
+      '$unlocked of $total unlocked';
+  static String profileGoalsSubtitle(int daily, int weekly) =>
+      'Daily $daily · Weekly $weekly days';
+  static const profileAppearance = 'Appearance';
+  static const profileTimerFeedback = 'Timer & feedback';
+  static const profileTimerFeedbackSubtitle = 'Vibration, sound, default rest';
+  static const profileGoals = 'Goals';
+  static const profileDailyGoal = 'Daily goal';
+  static String profileDailyGoalValue(int n) =>
+      n == 1 ? '1 exercise' : '$n exercises';
+  static const profileDailyGoalHint = 'Shown as the ring on your home page';
+  static const profileDailyLower = 'Lower daily goal';
+  static const profileDailyRaise = 'Raise daily goal';
+  static const profileAvatarColor = 'Avatar color';
+  static String profileTrainingSince(String date) => 'Training since $date';
+  static const profileRecords = 'Personal records';
+  static const profileRecordBestDay = 'Best day';
+  static const profileRecordSessions = 'Total sessions';
+  static const profileRecordActiveDays = 'Active days';
+  static const profileRecordLongest = 'Longest streak';
+  static const profileHeatmap = 'Activity';
+  static const profileHeatmapLast = 'Last 12 weeks';
+  static const profileHeatmapLess = 'Less';
+  static const profileHeatmapMore = 'More';
+  static const profileRoadmap = 'Level roadmap';
+  static String profileRoadmapAt(int n) => n == 0 ? 'Start' : '$n exercises';
+  static const profileProgramProgress = 'Programs';
+  static const profileResetProgram = 'Reset program';
+  static String profileResetProgramTitle(String name) => 'Reset $name?';
+  static const profileResetProgramMessage =
+      'This clears your progress in this program only. Other programs are kept.';
+  static const settingsHaptics = 'Vibration';
+  static const settingsHapticsHint = 'Buzz when a timer phase ends';
+  static const settingsSound = 'Sound';
+  static const settingsSoundHint = 'Play a tone when a timer phase ends';
+  static const settingsDefaultRest = 'Default rest time';
+  static const settingsExport = 'Copy progress summary';
+  static const settingsExportDone = 'Progress summary copied';
+  static const settingsGroupPreferences = 'Preferences';
+  static const settingsGroupData = 'Data';
+  static const settingsResetProgressTitle ='Reset progress?';
   static const settingsResetProgressMessage =
       'This clears every completed exercise, your streak and badges. '
       'It cannot be undone.';

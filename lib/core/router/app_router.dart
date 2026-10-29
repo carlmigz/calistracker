@@ -3,6 +3,7 @@ import 'package:calistracker/core/session/app_session.dart';
 import 'package:calistracker/features/auth/presentation/pages/login_page.dart';
 import 'package:calistracker/features/home/presentation/pages/home_page.dart';
 import 'package:calistracker/features/onboarding/presentation/pages/onboarding_page.dart';
+import 'package:calistracker/features/profile/presentation/pages/edit_profile_page.dart';
 import 'package:calistracker/features/profile/presentation/pages/profile_page.dart';
 import 'package:calistracker/features/programs/presentation/pages/program_detail_page.dart';
 import 'package:calistracker/features/progress/presentation/pages/progress_page.dart';
@@ -22,6 +23,7 @@ class AppRoutes {
   static const timer = '/timer';
   static const progress = '/progress';
   static const profile = '/profile';
+  static const editProfile = '/profile/edit';
 
   static String program(String programId) => '$home/program/$programId';
 
@@ -75,6 +77,11 @@ GoRouter createRouter(AppSession session) {
           programId: state.pathParameters['programId']!,
           exerciseId: state.pathParameters['exerciseId']!,
         ),
+      ),
+      GoRoute(
+        path: AppRoutes.editProfile,
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => const EditProfilePage(),
       ),
       StatefulShellRoute.indexedStack(
         builder: (context, state, shell) => AppBottomNav(shell: shell),

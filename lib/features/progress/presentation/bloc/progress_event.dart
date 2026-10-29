@@ -23,3 +23,13 @@ class ExerciseCompleted extends ProgressEvent {
 class ProgressReset extends ProgressEvent {
   const ProgressReset();
 }
+
+/// Clears the completions of just these exercises (e.g. one program).
+class ExercisesReset extends ProgressEvent {
+  const ExercisesReset(this.exerciseIds);
+
+  final Set<String> exerciseIds;
+
+  @override
+  List<Object?> get props => [exerciseIds];
+}

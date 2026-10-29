@@ -15,6 +15,8 @@ class UserLevel {
     (name: 'Athlete', at: 16),
   ];
 
+  static List<({String name, int at})> get tiers => _tiers;
+
   factory UserLevel.forCompleted(int completed) {
     var index = 0;
     for (var i = 0; i < _tiers.length; i++) {

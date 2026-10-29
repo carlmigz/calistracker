@@ -55,6 +55,26 @@ class UserProgress extends Equatable {
     return [for (var i = 6; i >= 0; i--) counts[dayOf(now, -i)] ?? 0];
   }
 
+  /// Completions per day (midnight keys); entries with no known date are skipped.
+  Map<DateTime, int> get dailyCounts {
+    final counts = <DateTime, int>{};
+    for (final c in _dated) {
+      counts.update(dayOf(c.completedAt), (n) => n + 1, ifAbsent: () => 1);
+    }
+    return counts;
+  }
+
+  /// Most completions on a single day, ever.
+  int get bestDayCount =>
+      dailyCounts.values.fold(0, (best, n) => n > best ? n : best);
+
+  /// Date of the earliest dated completion.
+  DateTime? get firstWorkout {
+    final dates = _dated.map((c) => c.completedAt);
+    if (dates.isEmpty) return null;
+    return dates.reduce((a, b) => a.isBefore(b) ? a : b);
+  }
+
   /// Newest first.
   List<Completion> recent(int count) {
     final sorted = _dated
