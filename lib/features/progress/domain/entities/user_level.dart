@@ -9,13 +9,42 @@ class UserLevel {
   });
 
   static const _tiers = [
-    (name: 'Beginner', at: 0),
-    (name: 'Novice', at: 4),
-    (name: 'Trained', at: 10),
-    (name: 'Athlete', at: 16),
+    (
+      name: 'Beginner',
+      at: 0,
+      about:
+          'Everyone starts here. You are learning the movements and building the habit.',
+      focus:
+          'Master the easiest variation of each program and train a few times a week.',
+    ),
+    (
+      name: 'Novice',
+      at: 4,
+      about:
+          'The basics feel familiar and your body is adapting to regular training.',
+      focus:
+          'Move up to the next variation, and keep your form clean before adding reps.',
+    ),
+    (
+      name: 'Trained',
+      at: 10,
+      about:
+          'You have a solid base across several movements and a routine that sticks.',
+      focus:
+          'Train every program, rest well, and chase longer holds and harder steps.',
+    ),
+    (
+      name: 'Athlete',
+      at: 16,
+      about:
+          'The top rank. You have completed a large part of every progression.',
+      focus:
+          'Finish the remaining steps, keep your streak and repeat favorites to stay sharp.',
+    ),
   ];
 
-  static List<({String name, int at})> get tiers => _tiers;
+  static List<({String name, int at, String about, String focus})> get tiers =>
+      _tiers;
 
   factory UserLevel.forCompleted(int completed) {
     var index = 0;

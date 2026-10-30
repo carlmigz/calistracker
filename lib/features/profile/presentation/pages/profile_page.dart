@@ -17,7 +17,12 @@ import 'package:calistracker/features/profile/presentation/components/profile_ti
 import 'package:calistracker/features/profile/presentation/components/program_progress_list.dart';
 import 'package:calistracker/features/profile/presentation/components/stats_row.dart';
 import 'package:calistracker/features/profile/presentation/components/weekly_goal_card.dart';
+import 'package:calistracker/core/router/app_router.dart';
+import 'package:calistracker/features/profile/presentation/components/stats_details.dart';
+import 'package:calistracker/features/profile/presentation/components/goals_insights.dart';
+import 'package:calistracker/features/profile/presentation/components/about_content.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
@@ -85,6 +90,8 @@ class ProfilePage extends StatelessWidget {
                         activeDays: d.progress.dailyCounts.length,
                         longestStreak: d.progress.longestStreak,
                       ),
+                      SizedBox(height: 16.h),
+                      StatsDetails(data: d),
                     ],
                   );
                 }),
@@ -105,12 +112,15 @@ class ProfilePage extends StatelessWidget {
                 icon: Icons.military_tech_rounded,
                 title: AppStrings.profileRoadmap,
                 subtitle: AppStrings.profileRoadmapSubtitle(data.level.name),
-                onTap: () => open(
-                  AppStrings.profileRoadmap,
-                  (context) => LevelRoadmap(
-                    completed: ProfileData.watch(context).completedCount,
-                  ),
-                ),
+                onTap: () => open(AppStrings.profileRoadmap, (context) {
+                  final d = ProfileData.watch(context);
+                  return LevelRoadmap(
+                    completed: d.completedCount,
+                    totalExercises: d.totalExercises,
+                    sessions: d.progress.completions.length,
+                    bestStreak: d.progress.longestStreak,
+                  );
+                }),
               ),
               ProfileTile(
                 icon: Icons.view_list_rounded,
@@ -124,6 +134,11 @@ class ProfilePage extends StatelessWidget {
                   return ProgramProgressList(
                     programs: d.programs,
                     completed: d.progress.completedIds,
+                    completions: d.progress.completions,
+                    now: d.now,
+                    onOpenExercise: (program, exercise) => context.push(
+                      AppRoutes.exercise(program.id, exercise.id),
+                    ),
                     onReset: (program) => confirmResetProgram(context, program),
                   );
                 }),
@@ -159,6 +174,7 @@ class ProfilePage extends StatelessWidget {
                   return Column(
                     spacing: 12.h,
                     children: [
+                      GoalsInsights(data: d),
                       DailyGoalSetting(
                         goal: d.settings.dailyGoal,
                         doneToday: d.doneToday,
@@ -168,6 +184,10 @@ class ProfilePage extends StatelessWidget {
                         activeDays: d.activeDaysThisWeek,
                         goal: d.settings.weeklyGoal,
                         onGoalChanged: cubit.setWeeklyGoal,
+                      ),
+                      GoalsAdvice(
+                        dailyGoal: d.settings.dailyGoal,
+                        weeklyGoal: d.settings.weeklyGoal,
                       ),
                     ],
                   );
@@ -222,12 +242,10 @@ class ProfilePage extends StatelessWidget {
               ProfileTile(
                 icon: Icons.info_outline,
                 title: AppStrings.settingsAbout,
-                showChevron: false,
-                onTap: () => showAboutDialog(
-                  context: context,
-                  applicationName: AppStrings.appName,
-                  applicationVersion: '1.0.0',
-                  applicationLegalese: AppStrings.settingsLegalese,
+                subtitle: 'Version ${AboutContent.version}',
+                onTap: () => open(
+                  AppStrings.settingsAbout,
+                  (context) => const AboutContent(),
                 ),
               ),
               ProfileTile(

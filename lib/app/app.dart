@@ -50,6 +50,14 @@ class _CalisTrackerAppState extends State<CalisTrackerApp> {
               darkTheme: AppTheme.dark,
               themeMode: settings.themeMode,
               routerConfig: _router,
+              builder: (context, child) => ColoredBox(
+                color: Theme.of(context).scaffoldBackgroundColor,
+                child: SafeArea(
+                  top: false,
+                  bottom: true,
+                  child: child ?? const SizedBox.shrink(),
+                ),
+              ),
             ),
           ),
         ),

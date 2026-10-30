@@ -6,6 +6,7 @@ import 'package:calistracker/features/timer/presentation/bloc/timer_cubit.dart';
 import 'package:calistracker/features/timer/presentation/components/interval_settings.dart';
 import 'package:calistracker/features/timer/presentation/components/rest_presets.dart';
 import 'package:calistracker/features/timer/presentation/components/timer_dial.dart';
+import 'package:calistracker/features/timer/presentation/components/timer_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -138,8 +139,16 @@ class _TimerView extends HookWidget {
                     ),
                   ],
                 ),
-                SizedBox(height: 24.h),
-                if (mode.value == _TimerMode.rest)
+                SizedBox(height: 16.h),
+                BlocBuilder<TimerCubit, TimerState>(
+                  buildWhen: (a, b) =>
+                      a.phase != b.phase ||
+                      a.round != b.round ||
+                      a.secondsLeft != b.secondsLeft,
+                  builder: (context, s) => TimerSessionCard(state: s),
+                ),
+                SizedBox(height: 16.h),
+                if (mode.value == _TimerMode.rest) ...[
                   RestPresets(
                     presets: SettingsCubit.restPresets,
                     selected: restSeconds.value,
@@ -148,8 +157,10 @@ class _TimerView extends HookWidget {
                       restSeconds.value = s;
                       apply();
                     },
-                  )
-                else
+                  ),
+                  SizedBox(height: 12.h),
+                  RestGuideCard(seconds: restSeconds.value),
+                ] else ...[
                   IntervalSettings(
                     work: intervalWork.value,
                     rest: intervalRest.value,
@@ -157,6 +168,22 @@ class _TimerView extends HookWidget {
                     enabled: state.isIdle,
                     onChanged: setInterval,
                   ),
+                  SizedBox(height: 16.h),
+                  IntervalTemplates(
+                    enabled: state.isIdle,
+                    onSelected: (t) => setInterval(
+                      work: t.work,
+                      rest: t.rest,
+                      rounds: t.rounds,
+                    ),
+                  ),
+                ],
+                SizedBox(height: 12.h),
+                TimerTipsCard(
+                  haptics: context.read<SettingsCubit>().state.hapticsEnabled,
+                  sound: context.read<SettingsCubit>().state.soundEnabled,
+                  interval: mode.value == _TimerMode.interval,
+                ),
               ],
             );
           },

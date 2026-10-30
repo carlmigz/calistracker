@@ -103,7 +103,9 @@ class _BadgeTile extends StatelessWidget {
             foregroundColor: unlocked
                 ? scheme.onPrimary
                 : scheme.onSurface.withValues(alpha: 0.4),
-            child: Icon(unlocked ? achievementIcon(achievement.id) : Icons.lock),
+            child: Icon(
+              unlocked ? achievementIcon(achievement.id) : Icons.lock,
+            ),
           ),
           SizedBox(height: 6.h),
           AppText(
