@@ -26,6 +26,7 @@ class AppProviders extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         RepositoryProvider.value(value: dependencies.session),
+        RepositoryProvider.value(value: dependencies.authRepository),
         BlocProvider(
           create: (_) => SettingsCubit(dependencies.settingsRepository),
         ),

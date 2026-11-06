@@ -99,9 +99,9 @@ The app follows **Feature-First Clean Architecture** powered by `flutter_bloc`:
 - **Typography**: Ethnocentric (Headings) & Poppins (Body)
 
 ### Backend Service (Optional)
-- **Runtime**: Node.js & Express (`calistracker-api/`)
-- **Database / ORM**: PostgreSQL & Sequelize
-- **Authentication**: JSON Web Tokens (JWT) & bcrypt
+- **Runtime**: PHP & Laravel (`calistracker-api/`)
+- **Database / ORM**: PostgreSQL & Eloquent
+- **Authentication**: Laravel Sanctum bearer tokens & bcrypt
 
 ---
 
@@ -133,7 +133,7 @@ calistracker/
 │   │   ├── workout/               # Active workout player & rep/hold cubit
 │   │   └── workouts/              # Exercise library and movement browser
 │   └── main.dart                  # Application entry point
-├── calistracker-api/              # Node.js + Express + PostgreSQL companion API
+├── calistracker-api/              # Laravel + Sanctum + PostgreSQL companion API
 └── pubspec.yaml                   # Package dependencies and asset registry
 ```
 

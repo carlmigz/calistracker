@@ -51,6 +51,39 @@ abstract final class AppStrings {
   static const loginPassword = 'Password';
   static const loginForgotPassword = 'Forgot password?';
   static const loginSignIn = 'Sign In';
+  static const loginWelcomeTitle = 'Train smarter.\nStart from zero.';
+  static const loginWelcomeSubtitle =
+      'Free, step-by-step calisthenics for beginners. No gym needed.';
+  static const loginCreateAccount = 'Create Account';
+  static const loginAlreadyMember = 'Already a member? ';
+
+  // Sign up
+  static const signUpTitle = 'Create account';
+  static const signUpNext = 'Next';
+  static const signUpBack = 'Back';
+  static const signUpFinish = 'Start training';
+  static String signUpStepCount(int step, int total) => 'Step $step of $total';
+  static const signUpAccountTitle = 'Let\'s get you set up';
+  static const signUpAccountSubtitle = 'Create your login details.';
+  static const signUpFirstName = 'First name';
+  static const signUpConfirmPassword = 'Confirm password';
+  static const signUpAboutTitle = 'About you';
+  static const signUpAboutSubtitle =
+      'This helps us pick a safe starting point.';
+  static const signUpGender = 'Gender';
+  static const signUpAge = 'Age';
+  static const signUpGenderRequired = 'Please choose an option to continue';
+  static const signUpBodyTitle = 'Your body stats';
+  static const signUpBodySubtitle =
+      'Used to track your progress. You can change units any time.';
+  static const signUpHeight = 'Height';
+  static const signUpWeight = 'Weight';
+  static const signUpGoalsTitle = 'What are your goals?';
+  static const signUpGoalsSubtitle = 'Pick everything that applies.';
+  static const signUpGoalsRequired = 'Pick at least one goal';
+  static const signUpExperience = 'Experience';
+  static const signUpDaysPerWeek = 'Training days per week';
+  static const signUpPrivacy = 'Your details stay on this device.';
 
   // Home
   static const homeGoodMorning = 'Good morning';

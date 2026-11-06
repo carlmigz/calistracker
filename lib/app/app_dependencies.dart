@@ -1,4 +1,6 @@
 import 'package:calistracker/core/session/app_session.dart';
+import 'package:calistracker/features/auth/data/repositories/auth_repository_impl.dart';
+import 'package:calistracker/features/auth/domain/repositories/auth_repository.dart';
 import 'package:calistracker/features/profile/data/repositories/settings_repository_impl.dart';
 import 'package:calistracker/features/profile/domain/repositories/settings_repository.dart';
 import 'package:calistracker/features/progress/data/datasources/progress_local_datasource.dart';
@@ -19,8 +21,10 @@ class AppDependencies {
       progressRepository = ProgressRepositoryImpl(
         ProgressLocalDataSourceImpl(prefs),
       ),
-      settingsRepository = SettingsRepositoryImpl(prefs);
+      settingsRepository = SettingsRepositoryImpl(prefs),
+      authRepository = AuthRepositoryImpl(prefs);
 
+  final AuthRepository authRepository;
   final AppSession session;
   final ProgramsRepository programsRepository;
   final ProgressRepository progressRepository;

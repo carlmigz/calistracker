@@ -1,6 +1,8 @@
 import 'package:calistracker/core/components/app_bottom_nav.dart';
 import 'package:calistracker/core/session/app_session.dart';
 import 'package:calistracker/features/auth/presentation/pages/login_page.dart';
+import 'package:calistracker/features/auth/presentation/pages/sign_in_page.dart';
+import 'package:calistracker/features/auth/presentation/pages/sign_up_page.dart';
 import 'package:calistracker/features/home/presentation/pages/home_page.dart';
 import 'package:calistracker/features/onboarding/presentation/pages/onboarding_page.dart';
 import 'package:calistracker/features/profile/presentation/pages/edit_profile_page.dart';
@@ -18,6 +20,8 @@ class AppRoutes {
 
   static const onboarding = '/onboarding';
   static const login = '/login';
+  static const signIn = '/login/sign-in';
+  static const signUp = '/login/sign-up';
   static const home = '/home';
   static const workouts = '/workouts';
   static const timer = '/timer';
@@ -54,9 +58,10 @@ GoRouter createRouter(AppSession session) {
         return location == AppRoutes.onboarding ? null : AppRoutes.onboarding;
       }
       if (!session.isLoggedIn) {
-        return location == AppRoutes.login ? null : AppRoutes.login;
+        return location.startsWith(AppRoutes.login) ? null : AppRoutes.login;
       }
-      if (location == AppRoutes.login || location == AppRoutes.onboarding) {
+      if (location.startsWith(AppRoutes.login) ||
+          location == AppRoutes.onboarding) {
         return AppRoutes.home;
       }
       return null;
@@ -69,6 +74,16 @@ GoRouter createRouter(AppSession session) {
       GoRoute(
         path: AppRoutes.login,
         builder: (context, state) => const LoginPage(),
+        routes: [
+          GoRoute(
+            path: 'sign-in',
+            builder: (context, state) => const SignInPage(),
+          ),
+          GoRoute(
+            path: 'sign-up',
+            builder: (context, state) => const SignUpPage(),
+          ),
+        ],
       ),
       // Full-screen workout: opened from any tab, hides the bottom bar.
       GoRoute(

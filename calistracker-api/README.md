@@ -1,42 +1,40 @@
 # calistracker-api
 
-Local REST API for CalisTracker. Node.js + Express + Sequelize + PostgreSQL.
+REST API for CalisTracker. Laravel 12 + Sanctum (bearer tokens) + PostgreSQL.
 
 ## Setup
 
-1. Install Node 18+ and PostgreSQL, then create a database: `createdb calistracker`
-2. `npm install`
-3. Copy `.env.example` to `.env` and set `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASSWORD` (or `DATABASE_URL` instead) and `JWT_SECRET`
-4. `npm run db:setup` (creates the tables from the models, then seeds programs and exercises from `../assets/data/programs.json`)
-5. `npm run dev` (or `npm start`), then open http://localhost:3000/health
+1. Install PHP 8.2+ (with `pdo_pgsql`), Composer and PostgreSQL, then create a database: `createdb calistracker`
+2. `composer install`
+3. Copy `.env.example` to `.env`, then `php artisan key:generate`
+4. Set `DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD` (or `DB_URL` instead) in `.env`
+5. `php artisan migrate --seed` (creates the tables, then seeds programs and exercises from `../assets/data/programs.json`)
+6. `php artisan serve --host=0.0.0.0`, then open http://localhost:8000/health
 
-The server starts even if the database is down; `/health` reports the connection state.
-From the Android emulator, reach it at `http://10.0.2.2:3000`.
+From the Android emulator, reach it at `http://10.0.2.2:8000`. (The old Node API used port 3000.)
 
-After changing a model, run `node scripts/migrate.js --alter` to update the tables (`--force` drops and recreates them).
+Re-run `php artisan db:seed` any time `programs.json` changes (it updates in place). `php artisan migrate:fresh --seed` drops everything and starts over.
 
 ## Structure
 
 ```
-src/
-  config.js            env settings
-  db.js                Sequelize instance
-  models/              User, UserSettings, Program, Exercise, Completion (+ associations in index.js)
-  controllers/         request handling, one file per resource
-  validators/          input checks that run before a controller
-  routes/index.js      URL -> controller mapping
-  middleware/          auth (JWT), rateLimit, requestLogger, errorHandler (+ asyncHandler)
-  utils/               logger (winston)
-  app.js               Express app (CORS, logging, rate limit, JSON, routes)
-  server.js            starts the server
-scripts/               migrate.js, seed.js
-tests/                 npm test (Node's built-in runner, no database needed)
-logs/                  error.log and combined.log (git-ignored)
+app/
+  Models/              User, UserSettings, Program, Exercise, Completion
+  Http/Controllers/    request handling, one file per resource
+  Http/Requests/       input checks that run before a controller (errors become 400 {"error": ...})
+  Http/Middleware/     LogRequest
+  Providers/           AppServiceProvider (rate limiters)
+bootstrap/app.php      middleware (trim, throttle, proxies) and JSON error rendering
+config/                laravel config + calistracker.php (rate limits, programs.json path)
+database/              migrations and the ProgramSeeder
+routes/api.php         URL -> controller mapping (served at the root, no /api prefix)
+tests/Feature/         php artisan test (SQLite in memory, no PostgreSQL needed)
+storage/logs/          combined and error logs (git-ignored)
 ```
 
 ## Logs
 
-Written with winston to the console and to `logs/error.log` (errors only) and `logs/combined.log` (everything). Each file rotates at 5 MB and keeps 5 files. Every request gets one line (method, URL, status, time); request bodies and passwords are never logged. Failed logins, registrations and server errors are logged too. Set `LOG_LEVEL` (`error`, `warn`, `info`, `http`, `debug`) and `LOG_DIR` in `.env`.
+Written to the console (stderr) and to `storage/logs/combined.log` (everything) and `storage/logs/error.log` (errors only), rotated daily (`LOG_DAILY_DAYS`). Every request gets one line (method, URL, status, time); request bodies and passwords are never logged. Failed logins, registrations and server errors are logged too. Set `LOG_LEVEL` in `.env`.
 
 ## CORS
 
@@ -44,12 +42,12 @@ Set `CORS_ORIGIN` in `.env` to a comma-separated list of origins (for example `h
 
 ## Rate limiting
 
-Per IP, using `express-rate-limit`. Over the limit, the API returns `429 {"error": ...}` with `RateLimit-*` headers. Defaults, set in `.env`:
+Per IP. Over the limit, the API returns `429 {"error": ...}` with `Retry-After` and `X-RateLimit-*` headers. Defaults, set in `.env`:
 
 - All requests: 300 per 15 minutes (`RATE_LIMIT_MAX`, `RATE_LIMIT_WINDOW_MINUTES`)
 - `/auth/register` and `/auth/login`: 20 per 15 minutes (`RATE_LIMIT_AUTH_MAX`), counted in addition to the global limit
 
-Counts are kept in memory and reset when the server restarts. Set `TRUST_PROXY=true` only behind a reverse proxy.
+Counts are kept in the cache (`CACHE_STORE`, `file` by default). Set `TRUST_PROXY=true` only behind a reverse proxy.
 
 ## Endpoints
 
@@ -59,15 +57,15 @@ Counts are kept in memory and reset when the server restarts. Set `TRUST_PROXY=t
 | POST | `/auth/register` | no | `{email, password, username?, displayName?}` returns `{token, user}`. Username: 3-30 letters, numbers or `_` |
 | POST | `/auth/login` | no | `{identifier, password}` where `identifier` is the email or the username. `email` or `username` are accepted in its place. Returns `{token, user}` |
 | GET | `/programs` | no | Same shape as `programs.json` |
-| GET | `/programs/:id` | no | One program with its ordered exercises |
+| GET | `/programs/{id}` | no | One program with its ordered exercises |
 | GET / PATCH | `/me` | yes | PATCH `{displayName}` |
 | GET / PUT | `/me/settings` | yes | PUT is partial: `themeMode`, `weeklyGoal`, `dailyGoal`, `avatarColorIndex`, `avatarAsset`, `hapticsEnabled`, `soundEnabled`, `defaultRestSeconds`, `onboardingSeen` |
 | GET | `/me/completions` | yes | All completions, oldest first |
 | POST | `/me/completions` | yes | `{exerciseId, completedAt?}` (ISO string or epoch millis; defaults to now) |
-| DELETE | `/me/completions/:id` | yes | |
+| DELETE | `/me/completions/{id}` | yes | |
 
-Send `Authorization: Bearer <token>` on authenticated routes.
+Send `Authorization: Bearer <token>` on authenticated routes. Tokens expire after 30 days (`SANCTUM_TOKEN_EXPIRATION_MINUTES`). Every error is `{"error": "..."}`.
 
 ## Tables
 
-`users`, `user_settings`, `programs`, `exercises`, `completions`. Streaks, levels, weekly activity and achievements are derived from `completions` by the app and are not stored.
+`users`, `user_settings`, `programs`, `exercises`, `completions`, `personal_access_tokens` (Sanctum). Streaks, levels, weekly activity and achievements are derived from `completions` by the app and are not stored. `exercises.muscles` and `exercises.steps` are `jsonb` arrays.
